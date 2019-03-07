@@ -1,0 +1,53 @@
+{
+	"name": "cuneiform-text-corpus",
+	"private": true,
+	"version": "1.0.0",
+	"description": "Corpus of texts written in cuneiform",
+	"main": "gulpfile.js",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Communio-Templorum/cuneiform-text-corpus.git"
+	},
+	"author": "Sam Grundman",
+	"bugs": {
+		"url": "https://github.com/Communio-Templorum/cuneiform-text-corpus/issues"
+	},
+	"homepage": "https://github.com/Communio-Templorum/cuneiform-text-corpus#readme",
+	"devDependencies": {
+		"@mightyplow/sass-dedup-importer": "^1.1.1",
+		"@yodasws/gulp-htmllint": "<1.0.0",
+		"@yodasws/gulp-pattern-replace": "^1.1.1",
+		"angular": "^1.6.4",
+		"angular-route": "^1.6.4",
+		"async": "^2.6.0",
+		"babel-plugin-transform-exponentiation-operator": "^6.24.1",
+		"babel-plugin-transform-remove-console": "^6.8.3",
+		"babel-preset-es2015": "^6.24.1",
+		"file-exists": "^4.0.0",
+		"font-awesome": "^4.7.0",
+		"gulp": "github:gulpjs/gulp#4.0",
+		"gulp-autoprefixer": "^4.0.0",
+		"gulp-babel": "^6.1.2",
+		"gulp-concat": "^2.6.1",
+		"gulp-eslint": "^3.0.1",
+		"gulp-file": "^0.4.0",
+		"gulp-htmlmin": "^3.0.0",
+		"gulp-jsdom": "^1.0.1",
+		"gulp-load-plugins": "^1.5.0",
+		"gulp-order": "^1.1.1",
+		"gulp-rm-lines": "^0.0.9",
+		"gulp-run-command": "^0.0.7",
+		"gulp-sass": "^4.0.0",
+		"gulp-sass-lint": "^1.3.2",
+		"gulp-sourcemaps": "^2.6.0",
+		"gulp-ssi": "^0.1.3",
+		"gulp-strip-css-comments": "^1.2.0",
+		"gulp-webserver": "^0.9.1",
+		"jquery": "^3.2.1",
+		"json-loader": "^0.5.7",
+		"node-sass": "^4.9.0",
+		"vinyl-named": "^1.1.0",
+		"webpack-stream": "^4.0.3",
+		"yargs": "^8.0.2"
+	}
+}

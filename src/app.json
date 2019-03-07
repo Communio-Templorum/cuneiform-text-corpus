@@ -1,0 +1,9 @@
+{
+	"name": "cuneiform-text-corpus",
+	"components": [],
+	"sections": [],
+	"modules": [
+		"ngRoute"
+	],
+	"pages": []
+}
