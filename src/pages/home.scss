@@ -1,0 +1,45 @@
+body[ng-section="home"] {
+	> nav:not([hidden]) [href="."] {
+		display: none;
+	}
+
+	h2 {
+		text-align: center;
+	}
+	
+	> footer,
+	> nav {
+		order: 1;
+	}
+
+	> nav {
+		background: none;
+		flex-grow: 1;
+		display: block;
+
+		ul,
+		ul[hidden] {
+			transition-delay: 300ms;
+			position: static;
+			transform: none;
+			margin: 0;
+			background: inherit;
+			border: 0 none;
+			transition: none;
+		}
+
+		a:not([href]) {
+			color: inherit;
+			cursor: auto;
+
+			&:hover {
+				text-decoration: none;
+			}
+		}
+	}
+
+	> main {
+		flex-grow: 0;
+		order: 0;
+	}
+}

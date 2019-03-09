@@ -51,7 +51,7 @@ body > nav:not([hidden]) {
 		border: 1px solid black;
 		border-top: 0 none;
 		list-style: disc;
-		transition: transform 750ms;
+		transition: background 500ms, transform 750ms;
 		transform-origin: top center;
 		margin: 0;
 
