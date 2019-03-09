@@ -1,55 +1,41 @@
-:root {
-	font-family: 'Trebuchet MS', 'Open Sans', sans-serif;
-}
+[ng-section="etcsl"] {
+	.proper {
+		color: green;
+	}
 
-* {
-	box-sizing: border-box;
-}
+	main {
+		counter-reset: column;
+	}
 
-header h1 {
-	margin-bottom: 0.7rem;
-	margin-top: 0;
-	text-align: center;
-}
-header { border-bottom: 2px solid grey; }
+	ol::before {
+		display: block;
+		font-weight: bold;
+		font-size: 1.2em;
+		counter-increment: column;
+		content: "Column " counter(column);
+	}
 
-a:link,
-a:visited {
-	text-decoration: none;
-	color: blue;
-}
-a:link:focus,
-a:link:hover,
-a:link:active,
-a:visited:focus,
-a:visited:hover,
-a:visited:active {
-	text-decoration: underline;
-}
+	main li {
+		font-size: 1rem;
+	}
 
-.proper { color: green; }
-main { counter-reset: column; }
+	li[value="0"] {
+		list-style: none;
+	}
 
-ol::before {
-	display: block;
-	font-weight: bold;
-	font-size: 1.2em;
-	counter-increment: column;
-	content: "Column " counter(column);
-}
-main li { font-size: 1rem; }
-li[value="0"] { list-style: none; }
+	ruby > rt:lang(en) {
+		display: inline-block;
+		font-size: 0.8em;
+		vertical-align: middle;
+	}
 
-ruby > rt:lang(en) {
-	display: inline-block;
-	font-size: 0.8em;
-	vertical-align: middle;
-}
-ruby > rt:lang(en)::before {
-	display: inline;
-	content: '\a0(';
-}
-ruby > rt:lang(en)::after {
-	display: inline;
-	content: ')';
+	ruby > rt:lang(en)::before {
+		display: inline;
+		content: "\a0(";
+	}
+
+	ruby > rt:lang(en)::after {
+		display: inline;
+		content: ")";
+	}
 }

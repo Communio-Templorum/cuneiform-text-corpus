@@ -1,6 +1,6 @@
 * { box-sizing: border-box; }
 
-:root { font-family: 'Trebuchet MS', 'Open Sans', 'Helvetica Neue', sans-serif; }
+:root { font-family: "Trebuchet MS", "Open Sans", "Helvetica Neue", sans-serif; }
 
 html {
 	height: 100%;
@@ -37,5 +37,12 @@ h6 {
 
 a:link,
 a:visited {
+	text-decoration: none;
 	color: dodgerblue;
+
+	&:focus,
+	&:hover,
+	&:active {
+		text-decoration: underline;
+	}
 }
