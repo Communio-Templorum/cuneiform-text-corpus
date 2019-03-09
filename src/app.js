@@ -24,8 +24,12 @@ angular.module('cuneiformTextCorpus', modules)
 		let next = e.currentTarget;
 		do next = next.nextElementSibling;
 		while (next && next.nodeName.toLowerCase() !== 'ul');
-		if (next instanceof Element) {
-			next.toggleAttribute('hidden');
+		const isHidden = next && next.hasAttribute('hidden');
+		document.querySelectorAll('body > nav ul:not([hidden])').forEach((list) => {
+			list.setAttribute('hidden', '');
+		});
+		if (next instanceof Element && isHidden) {
+			next.removeAttribute('hidden');
 		}
 	}
 
