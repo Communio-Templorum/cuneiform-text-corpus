@@ -5,9 +5,12 @@ $header-second-color: black;
 body > header {
 	color: $header-color;
 	background: $header-bg;
+	border-bottom: 0 none;
+
 
 	h1 {
 		margin: 0;
+		text-align: center;
 	}
 
 	h2 {
@@ -21,8 +24,40 @@ body > nav:not([hidden]) {
 	justify-content: space-between;
 	align-content: flex-start;
 	align-items: flex-start;
+	position: relative;
+	background: honeydew;
+	border-bottom: 1px solid black;
 
 	> *:not([hidden]) {
 		display: block;
+	}
+
+	a {
+		@extend a:link;
+		cursor: pointer;
+		color: blue;
+	}
+
+	ul {
+		position: absolute;
+		top: calc(100% - 1px);
+		left: 50%;
+		transform: translateX(-50%) scaleY(1);
+		background: honeydew;
+		padding: 6px 15px 6px calc(15px + 1rem);
+		min-width: 50%;
+		max-width: 100%;
+		color: black;
+		border: 1px solid black;
+		border-top: 0 none;
+		list-style: disc;
+		transition: transform 750ms;
+		transform-origin: top center;
+		margin: 0;
+
+		&[hidden] {
+			display: block;
+			transform: translateX(-50%) scaleY(0);
+		}
 	}
 }

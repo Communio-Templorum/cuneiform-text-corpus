@@ -6,7 +6,7 @@ angular.module('cuneiformTextCorpus', modules)
 		templateUrl: 'pages/home.html',
 		controllerAs: '$ctrl',
 		controller() {
-			angular.element('[ng-view]').attr('ng-view', 'pageHome')
+			document.body.setAttribute('ng-section', 'home')
 		},
 	})
 	.when('/etcsl/:href', {
@@ -15,8 +15,31 @@ angular.module('cuneiformTextCorpus', modules)
 		},
 		controllerAs: '$ctrl',
 		controller() {
-			angular.element('[ng-view]').attr('ng-view', 'pageEtcsl')
+			document.body.setAttribute('ng-section', 'etcsl')
 		},
 	})
-	.otherwise({redirectTo: '/'})
+	.otherwise({redirectTo: '/'});
+
+	function toggleMenu(e) {
+		let next = e.currentTarget;
+		do next = next.nextElementSibling;
+		while (next && next.nodeName.toLowerCase() !== 'ul');
+		if (next instanceof Element) {
+			next.toggleAttribute('hidden');
+		}
+	}
+
+	document.querySelectorAll('body > nav li > a').forEach((link) => {
+		link.addEventListener('click', toggleMenu);
+	});
+
+	// Close Menu on Navigation
+	window.addEventListener('hashchange', () => {
+		document.querySelectorAll('body > nav ul:not([hidden])').forEach((list) => {
+			list.setAttribute('hidden', '');
+		});
+	});
+
+	const nav = document.querySelector('body > nav[hidden]');
+	if (nav instanceof Element) nav.removeAttribute('hidden');
 }])
