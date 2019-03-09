@@ -4,8 +4,14 @@
 <!--#include file="includes/head-includes.html" -->
 <title>Cuneiform Text Corpus</title>
 </head>
-<body ng-cloak>
+<body>
 <!--#include file="includes/header/header.html" -->
-<main ng-view></main>
+<main ng-view>
+<div class="loading">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -60 120 120">
+	<path d="M 0-40 A 40 40 0 1 1 0 40"/>
+	<path d="M 0-40 A 40 40 0 1 0 0 40"/>
+</svg>Loading&hellip;</div>
+</main>
 </body>
 </html>

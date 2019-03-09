@@ -9,6 +9,8 @@ html {
 }
 
 body {
+	display: flex;
+	flex-flow: column nowrap;
 	margin: 0 auto;
 	width: 100%;
 	max-width: 1200px;
@@ -23,6 +25,50 @@ body {
 
 	> * {
 		padding: 5px calc(5px * 2.5);
+	}
+
+	> main {
+		flex-grow: 1;
+	}
+
+	&:not([ng-section]) > main {
+		display: flex;
+		flex-flow: row nowrap;
+		align-content: stretch;
+		justify-content: center;
+		align-items: center;
+
+		.loading {
+			font-size: 2rem;
+			text-align: center;
+
+			svg * {
+				stroke-linejoin: round;
+				stroke-linecap: round;
+			}
+
+			path {
+				fill: none;
+				stroke: black;
+				stroke-width: 10px;
+				opacity: 0.5;
+
+				&:nth-of-type(odd) {
+					animation: 2s linear infinite rotate;
+					stroke: red;
+				}
+
+				&:nth-of-type(even) {
+					animation: 3s linear infinite reverse rotate;
+					stroke: gold;
+				}
+			}
+
+			@keyframes rotate {
+				from { transform: rotate(0deg); }
+				to { transform: rotate(360deg); }
+			}
+		}
 	}
 }
 
