@@ -1136,7 +1136,9 @@
 				{
 					"eval":"el.getAttribute('title').indexOf('(') > -1 ? el.getAttribute('title').split(/\\s*\\([^\\)]*\\)\\s*/g)[0] : ''",
 					"@lang":"sux-Latn"
-				},
+				}
+			],
+			"rtc":[
 				{
 					"eval":"el.getAttribute('title').indexOf('(') > -1 ? el.getAttribute('title').split(/\\s*\\([^\\)]*\\)\\s*/g)[1] : ''",
 					"@lang":"en"

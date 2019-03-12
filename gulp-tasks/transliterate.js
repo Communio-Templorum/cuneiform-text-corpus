@@ -145,14 +145,21 @@ module.exports = (gulp, plugins, options) => gulp.series(
 				json.ruby.forEach((ruby) => {
 					stream = stream.pipe(plugins.dom((document) => {
 						document.querySelectorAll(ruby.query).forEach((el) => {
-							let html = ` <ruby class="${el.getAttribute('class') || ''}" lang="${ruby['@lang'] || 'en'}">${eval(ruby.rb)}`;
+							let html = ` <ruby class="${el.getAttribute('class') || ''}" lang="${ruby['@lang'] || 'en'}" translate="no">${eval(ruby.rb)}`;
 							const rt = [];
 							if (!Array.isArray(ruby.rt)) {
 								ruby.rt = [ruby.rt];
 							}
-							ruby.rt.forEach((rt) => {
-								const txt = eval(rt.eval);
-								if (txt && txt !== 'X' && txt !== '…') html += `<rt lang="${rt['@lang'] || 'en'}">${txt}`;
+							[
+								'rt',
+								'rtc',
+							].forEach((tag) => {
+								ruby[tag].forEach((val) => {
+									const txt = eval(val.eval);
+									if (txt && txt !== 'X' && txt !== '…') {
+										html += `<${tag} lang="${val['@lang'] || 'en'}" translate="${tag === 'rt' ? 'no' : 'yes'}">${txt}`;
+									}
+								});
 							});
 							html += `</ruby> `;
 							el.outerHTML = html;

@@ -23,19 +23,19 @@
 		list-style: none;
 	}
 
-	ruby > rt:lang(en) {
+	ruby > rtc:lang(en) {
 		display: inline-block;
 		font-size: 0.8em;
 		vertical-align: middle;
-	}
 
-	ruby > rt:lang(en)::before {
-		display: inline;
-		content: "\a0(";
-	}
+		&::before {
+			display: inline;
+			content: "\a0(";
+		}
 
-	ruby > rt:lang(en)::after {
-		display: inline;
-		content: ")";
+		&::after {
+			display: inline;
+			content: ")";
+		}
 	}
 }
