@@ -240,7 +240,7 @@ const options = {
 'property-sort-order': 0,
 'pseudo-element': 1,
 'quotes': [
-	1, { style: 'single' }
+	1, { style: 'double' }
 ],
 'shorthand-values': 1,
 'url-quotes': 1,

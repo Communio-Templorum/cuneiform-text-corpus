@@ -9,23 +9,8 @@ module.exports = (gulp, plugins, options) => gulp.series(
 			`src/etcsl/**/*.html`,
 		])
 			.pipe(plugins.replaceString(
-				new RegExp(`<!DOCTYPE html[^>]*>`, 'gi'),
-				'<!DOCTYPE html>',
-				{ logs },
-			))
-			.pipe(plugins.replaceString(
-				new RegExp(`<meta[^>]*charset=[^>]*>`, 'gi'),
-				'<meta charset="utf-8"/>',
-				{ logs },
-			))
-			.pipe(plugins.replaceString(
-				new RegExp(`(<link[^>]*>\s*)+`, 'gi'),
-				'<link rel="stylesheet" href="style.css"/>',
-				{ logs },
-			))
-			.pipe(plugins.replaceString(
-				new RegExp(`<body\s[^>]*>`, 'gi'),
-				'<body>',
+				new RegExp(`<\/?(!DOCTYPE html|meta|link|head\b|title|body)[^>]*>`, 'gi'),
+				'',
 				{ logs },
 			))
 			.pipe(plugins.replaceString(
@@ -40,50 +25,62 @@ module.exports = (gulp, plugins, options) => gulp.series(
 			))
 			.pipe(plugins.replaceString(
 				new RegExp(`<span onMouseover=[^']+'([^']+)'[^>]*>`, 'g'),
-					'<span title="$1">',
-					{ logs },
-				))
-				.pipe(plugins.replaceString(
-					new RegExp(`\s*</td></tr>`, 'g'),
-					'</li>',
-					{ logs },
-				))
-				.pipe(plugins.replaceString(
-					new RegExp(`(</tbody>\s*)?</table>`, 'g'),
-					'</ol>',
-					{ logs },
-				))
-				.pipe(gulp.dest('build/etcsl'));
+				'<span title="$1">',
+				{ logs },
+			))
+			.pipe(plugins.replaceString(
+				new RegExp(`\s*</td></tr>`, 'g'),
+				'</li>',
+				{ logs },
+			))
+			.pipe(plugins.replaceString(
+				new RegExp(`(</tbody>\s*)?</table>`, 'g'),
+				'</ol>',
+				{ logs },
+			))
+			.pipe(gulp.dest('build/etcsl'));
 	},
 	(done) => {
 		// Convert pattern to RegExp
 		const patternToRegExp = (pattern) => {
 			if (typeof pattern === 'string') {
-				pattern = pattern.replace(/-/g, '\-')
-				pattern = pattern.replace(/(^|[^\\])\w$/i, '$&\\b')
-				pattern = pattern.replace(/^\w/i, '\\b$&')
-				pattern = new RegExp(pattern, 'g')
+				pattern = pattern.replace(/-/g, '\-');
+				pattern = pattern.replace(/(^|[^\\])\w$/i, '$&\\b');
+				pattern = pattern.replace(/^\w/i, '\\b$&');
+				pattern = new RegExp(pattern, 'g');
 			}
-			return pattern
-		}
+			return pattern;
+		};
 		const logs = false;
 
 		// Now Transliterate!
-		Object.entries({
-			etcsl: 'cuneiform',
-		}).forEach(([folder, script]) => {
-			const json = JSON.parse(fs.readFileSync(`./src/${script}.json`));
+		[
+			{
+				folder: 'etcsl',
+				selection: '**/{1,2}.*',
+				script: 'cuneiform',
+			},
+			{
+				folder: 'etcsl',
+				selection: '**/{4,5,6}.*',
+				script: 'cuneiform',
+			},
+		].forEach((obj) => {
+			const json = JSON.parse(fs.readFileSync(`./src/${obj.script}.json`));
 			let stream = gulp.src([
-				`build/${folder}/**/*.html`,
+				`build/${obj.folder}/${obj.selection}.html`,
 			]);
+
 			if (Array.isArray(json.remove)) {
 				stream = stream.pipe(plugins.replaceString(new RegExp(`(?:${json.remove.join('|')})`, 'g'), '', { logs }));
 			}
+
 			if (Array.isArray(json['special-chars'])) {
 				json['special-chars'].forEach((d) => {
 					stream = stream.pipe(plugins.replaceString(patternToRegExp(d[0]), d[1], { logs }));
 				});
 			}
+
 			// Transliterate special/peculiar words
 			if (Array.isArray(json.dictionary)) {
 				json.dictionary.forEach((d) => {
@@ -94,6 +91,7 @@ module.exports = (gulp, plugins, options) => gulp.series(
 					}));
 				});
 			}
+
 			if (Array.isArray(json.unicode)) {
 				json.unicode = json.unicode.reverse().filter((d) => {
 					d = d.pattern || d[0];
@@ -119,6 +117,7 @@ module.exports = (gulp, plugins, options) => gulp.series(
 					return `>${r}<`;
 				}, { logs }));
 			}
+
 			// Transliterate Number Codes
 			if (Array.isArray(json.numbers)) {
 				stream = stream.pipe(plugins.replaceString(/>NU:([^<]*)+</gi, (str, signs) => {
@@ -135,8 +134,10 @@ module.exports = (gulp, plugins, options) => gulp.series(
 					return `>${r}<`;
 				}, { logs }));
 			}
+
 			// Remove superscript around cuneiform
 			stream.pipe(plugins.replaceString(/<sup>((?:&#x12[0-9a-f]{3};)+)<\/sup>/gi, (str, signs) => signs, { logs }))
+
 			// Now to wrap our cuneiform in ruby
 			if (json.ruby) {
 				if (!Array.isArray(json.ruby)) {
@@ -146,14 +147,13 @@ module.exports = (gulp, plugins, options) => gulp.series(
 					stream = stream.pipe(plugins.dom((document) => {
 						document.querySelectorAll(ruby.query).forEach((el) => {
 							let html = ` <ruby class="${el.getAttribute('class') || ''}" lang="${ruby['@lang'] || 'en'}" translate="no">${eval(ruby.rb)}`;
-							const rt = [];
-							if (!Array.isArray(ruby.rt)) {
-								ruby.rt = [ruby.rt];
-							}
 							[
 								'rt',
 								'rtc',
 							].forEach((tag) => {
+								if (!Array.isArray(ruby[tag])) {
+									ruby[tag] = [ruby[tag]];
+								}
 								ruby[tag].forEach((val) => {
 									const txt = eval(val.eval);
 									if (txt && txt !== 'X' && txt !== '…') {
@@ -171,8 +171,9 @@ module.exports = (gulp, plugins, options) => gulp.series(
 						));
 				});
 			}
+
 			// Output Results
-			stream.pipe(gulp.dest(path.join(options.dest, folder)))
+			stream.pipe(gulp.dest(path.join(options.dest, obj.folder)))
 		});
 		done();
 	},
