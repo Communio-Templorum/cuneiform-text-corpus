@@ -38,4 +38,14 @@
 			content: ")";
 		}
 	}
+
+	aside {
+		display: flex;
+		flex-flow: row wrap;
+
+		> * {
+			display: block;
+			max-width: 200px;
+		}
+	}
 }
