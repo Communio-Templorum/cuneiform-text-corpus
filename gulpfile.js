@@ -20,7 +20,7 @@ function camelCase() {
 function getTask(task) {
 	try {
 		console.log(`looking for ./gulp-tasks/${task}.js`);
-		return require(`./gulp-tasks/${task}.js`)(gulp, plugins, options);
+		return require(`./gulp-tasks/${task}.js`)(gulp, plugins, options, argv);
 	} catch(e) {
 		// no catch
 	}
@@ -71,9 +71,10 @@ const argv = require('yargs')
 	.command('lint', 'Lint all JavaScript and Sass/SCSS files')
 	.command('transfer-files', 'Transfer all static assets and resources to docs folder')
 	.command('watch', 'Watch files for changes to recompile')
+	.array('file')
 	.help('?')
-	.epilog(' ©2017 Samuel B Grundman')
-	.argv
+	.epilog(' ©2017-2019 Samuel B Grundman')
+	.argv;
 
 const gulp = require('gulp');
 const path = require('path');

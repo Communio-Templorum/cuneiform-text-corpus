@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path');
-module.exports = (gulp, plugins, options) => gulp.series(
+module.exports = (gulp, plugins, options, argv) => gulp.series(
 	() => {
 		const logs = false;
 
@@ -54,18 +54,16 @@ module.exports = (gulp, plugins, options) => gulp.series(
 		const logs = false;
 
 		// Now Transliterate!
-		[
-			{
-				folder: 'etcsl',
-				selection: '**/{1,2}.*',
-				script: 'cuneiform',
-			},
-			{
-				folder: 'etcsl',
-				selection: '**/{4,5,6}.*',
-				script: 'cuneiform',
-			},
-		].forEach((obj) => {
+		const files = (argv.file || [
+			'**/{1,2}.*',
+			'**/{4,5,6}.*',
+		]).map(file => ({
+			folder: 'etcsl',
+			selection: file,
+			script: 'cuneiform',
+		}));
+		
+		files.forEach((obj) => {
 			const json = JSON.parse(fs.readFileSync(`./src/${obj.script}.json`));
 			let stream = gulp.src([
 				`build/${obj.folder}/${obj.selection}.html`,
