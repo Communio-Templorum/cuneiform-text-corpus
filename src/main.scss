@@ -90,5 +90,9 @@ a:visited {
 	&:hover,
 	&:active {
 		text-decoration: underline;
+
+		img {
+			outline: 1px auto;
+		}
 	}
 }
