@@ -21,6 +21,7 @@ angular.module('cuneiformTextCorpus', modules)
 	.otherwise({redirectTo: '/'});
 
 	function toggleMenu(e) {
+		if (document.body.getAttribute('ng-section') === 'home') return;
 		let next = e.currentTarget;
 		do next = next.nextElementSibling;
 		while (next && next.nodeName.toLowerCase() !== 'ul');
@@ -36,18 +37,37 @@ angular.module('cuneiformTextCorpus', modules)
 		}
 	}
 
-	// Show Nav on Page Load, but Only Need to Check Once
-	const showNavOnPageLoad = new MutationObserver(() => {
-		// Page loaded, show nav menu
-		const nav = document.querySelector('body > nav[hidden]');
-		if (nav instanceof Element) nav.removeAttribute('hidden');
-		showNavOnPageLoad.disconnect();
+	// Adjustments to Display of Nav for UX
+	new MutationObserver((mutationsList) => {
+		console.log('mutationsList:', mutationsList);
+		switch (mutationsList[0].oldValue) {
+			case 'home':
+				console.log('Hi Sam');
+				const navLists = document.querySelectorAll('body > nav ul');
+				// No Transition
+				navLists.forEach((list) => {
+					list.style.transition = 'none';
+					list.setAttribute('hidden', '');
+				});
+				// Reallow Transition after page change
+				setTimeout(() => {
+					navLists.forEach((list) => {
+						list.style.transition = '';
+					});
+				}, 0);
+				break;
+			case null:
+				// Page loaded, show nav menu
+				const nav = document.querySelector('body > nav[hidden]');
+				if (nav instanceof Element) nav.removeAttribute('hidden');
+		}
 	}).observe(document.body, {
 		attributeFilter: ['ng-section'],
+		attributeOldValue: true,
 		attributes: true,
 	});
 
-	document.querySelectorAll('body > nav li > a').forEach((link) => {
+	document.querySelectorAll('body > nav a:not([href])').forEach((link) => {
 		link.addEventListener('click', toggleMenu);
 	});
 
