@@ -12,17 +12,20 @@ body[ng-section="home"] {
 		order: 1;
 	}
 
-	> nav {
+	> nav:not([hidden]) {
 		background: none;
 		flex-grow: 1;
 		display: block;
 
 		ul,
-		ul[hidden] {
+		ul[hidden],
+		> li > ul,
+		> li > ul[hidden] {
 			transition-delay: 300ms;
 			position: static;
 			transform: none;
 			margin: 0;
+			max-height: none;
 			background: inherit;
 			border: 0 none;
 			transition: none;

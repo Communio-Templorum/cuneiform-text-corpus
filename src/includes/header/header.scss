@@ -38,11 +38,10 @@ body > nav:not([hidden]) {
 		color: blue;
 	}
 
-	ul {
+	> li > ul {
 		position: absolute;
 		top: 100%;
 		left: 50%;
-		transform: translateX(-50%) scaleY(1);
 		background: honeydew;
 		padding: 6px 15px 6px calc(15px + 1rem);
 		min-width: 50%;
@@ -51,13 +50,28 @@ body > nav:not([hidden]) {
 		border: 1px solid black;
 		border-top: 0 none;
 		list-style: disc;
-		transition: background 500ms, transform 750ms;
-		transform-origin: top center;
+		transform: translateX(-50%) scaleY(1);
 		margin: 0;
 
 		&[hidden] {
-			display: block;
 			transform: translateX(-50%) scaleY(0);
+		}
+	}
+
+	ul {
+		max-height: 50vh;
+		transition: background 500ms, transform 750ms, max-height 750ms linear;
+		transform-origin: top center;
+		transform: scaleY(1);
+		overflow: hidden;
+
+		&[hidden] {
+			display: block;
+			transform: scaleY(0);
+		}
+
+		ul[hidden] {
+			max-height: 0;
 		}
 	}
 }
