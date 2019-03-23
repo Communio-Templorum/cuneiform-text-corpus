@@ -51,11 +51,14 @@ body > nav:not([hidden]) {
 		border-top: 0 none;
 		list-style: disc;
 		transform: translateX(-50%) scaleY(1);
-		margin: 0;
 
 		&[hidden] {
 			transform: translateX(-50%) scaleY(0);
 		}
+	}
+
+	li:not(:last-child) > ul {
+		margin-bottom: 1rem;
 	}
 
 	ul {
@@ -64,6 +67,7 @@ body > nav:not([hidden]) {
 		transform-origin: top center;
 		transform: scaleY(1);
 		overflow: hidden;
+		margin: 0;
 
 		&[hidden] {
 			display: block;

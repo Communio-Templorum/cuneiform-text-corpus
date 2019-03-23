@@ -57,6 +57,10 @@ angular.module('cuneiformTextCorpus', modules)
 				}, 0);
 				break;
 			case null:
+				// Be sure all menus are collapsed
+				document.querySelectorAll('body > nav ul').forEach((list) => {
+					list.setAttribute('hidden', '');
+				});
 				// Page loaded, show nav menu
 				const nav = document.querySelector('body > nav[hidden]');
 				if (nav instanceof Element) nav.removeAttribute('hidden');
