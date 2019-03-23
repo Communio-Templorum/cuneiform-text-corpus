@@ -39,10 +39,8 @@ angular.module('cuneiformTextCorpus', modules)
 
 	// Adjustments to Display of Nav for UX
 	new MutationObserver((mutationsList) => {
-		console.log('mutationsList:', mutationsList);
 		switch (mutationsList[0].oldValue) {
 			case 'home':
-				console.log('Hi Sam');
 				const navLists = document.querySelectorAll('body > nav ul');
 				// No Transition
 				navLists.forEach((list) => {
