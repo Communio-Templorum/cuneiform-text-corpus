@@ -33,6 +33,17 @@ angular.module('cuneiformTextCorpus', modules)
 		}
 	}
 
+	// Show Nav on Page Load, but Only Need to Check Once
+	const showNavOnPageLoad = new MutationObserver(() => {
+		// Page loaded, show nav menu
+		const nav = document.querySelector('body > nav[hidden]');
+		if (nav instanceof Element) nav.removeAttribute('hidden');
+		showNavOnPageLoad.disconnect();
+	}).observe(document.body, {
+		attributeFilter: ['ng-section'],
+		attributes: true,
+	});
+
 	document.querySelectorAll('body > nav li > a').forEach((link) => {
 		link.addEventListener('click', toggleMenu);
 	});
@@ -43,7 +54,4 @@ angular.module('cuneiformTextCorpus', modules)
 			list.setAttribute('hidden', '');
 		});
 	});
-
-	const nav = document.querySelector('body > nav[hidden]');
-	if (nav instanceof Element) nav.removeAttribute('hidden');
 }])
