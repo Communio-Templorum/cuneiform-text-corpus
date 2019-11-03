@@ -31,7 +31,7 @@ body {
 		flex-grow: 1;
 	}
 
-	&[y-section='home'] > main {
+	&:not([y-section]) > main {
 		display: flex;
 		flex-flow: row nowrap;
 		align-content: stretch;
