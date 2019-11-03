@@ -22,7 +22,7 @@
 		"file-exists": "^4.0.0",
 		"font-awesome": "^4.7.0",
 		"gulp": "github:gulpjs/gulp#4.0",
-		"gulp-autoprefixer": "^4.0.0",
+		"gulp-autoprefixer": "^7.0.0",
 		"gulp-babel": "^8.0.0",
 		"gulp-concat": "^2.6.1",
 		"gulp-connect": "^5.7.0",
