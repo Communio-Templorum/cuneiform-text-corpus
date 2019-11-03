@@ -1,10 +1,18 @@
-[ng-section="etcsl"] {
+[y-section="etcsl"] {
 	.proper {
 		color: green;
 	}
 
 	main {
 		counter-reset: column;
+		flex-flow: column nowrap;
+		justify-content: flex-start;
+		align-content: stretch;
+		align-items: stretch;
+
+		h1 {
+			text-align: center;
+		}
 	}
 
 	ol::before {

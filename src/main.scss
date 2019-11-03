@@ -1,6 +1,6 @@
 * { box-sizing: border-box; }
 
-:root { font-family: "Trebuchet MS", "Open Sans", "Helvetica Neue", sans-serif; }
+:root { font-family: 'Trebuchet MS', 'Open Sans', 'Helvetica Neue', sans-serif; }
 
 html {
 	height: 100%;
@@ -31,7 +31,7 @@ body {
 		flex-grow: 1;
 	}
 
-	&:not([ng-section]) > main {
+	&[y-section='home'] > main {
 		display: flex;
 		flex-flow: row nowrap;
 		align-content: stretch;
