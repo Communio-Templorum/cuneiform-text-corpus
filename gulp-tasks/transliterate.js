@@ -141,9 +141,10 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 				if (!Array.isArray(json.ruby)) {
 					json.ruby = [json.ruby];
 				}
-				json.ruby.forEach((ruby) => {
-					stream = stream.pipe(plugins.dom((document) => {
-						document.querySelectorAll(ruby.query).forEach((el) => {
+
+				function rubyReplace(ruby) {
+					return function () {
+						this.querySelectorAll(ruby.query).forEach((el) => {
 							let html = ` <ruby class="${el.getAttribute('class') || ''}" lang="${ruby['@lang'] || 'en'}" translate="no">${eval(ruby.rb)}`;
 							[
 								'rt',
@@ -162,9 +163,13 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 							html += `</ruby> `;
 							el.outerHTML = html;
 						});
-					}))
+					}
+				}
+
+				json.ruby.forEach((ruby) => {
+					stream = stream.pipe(plugins.dom(rubyReplace(ruby)))
 						.pipe(plugins.replaceString(
-							new RegExp(`<\/?(!DOCTYPE html|html|body|head)[^>]*>`, 'gi'),
+							new RegExp(`<\/?(!DOCTYPE html|html|body|head\b)[^>]*>`, 'gi'),
 							'',
 						));
 				});

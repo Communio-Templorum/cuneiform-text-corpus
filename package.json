@@ -26,6 +26,7 @@
 		"gulp-babel": "^8.0.0",
 		"gulp-concat": "^2.6.1",
 		"gulp-connect": "^5.7.0",
+		"gulp-dom": "^1.0.0",
 		"gulp-eslint": "^6.0.0",
 		"gulp-file": "^0.4.0",
 		"gulp-htmlmin": "^3.0.0",
