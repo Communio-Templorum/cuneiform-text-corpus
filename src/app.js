@@ -5,19 +5,6 @@ yodasws.page('home').setRoute({
 	route: '/',
 }).on('load', () => {
 
-/*
-	.when('/etcsl/:href', {
-		templateUrl($routeParams) {
-			return `etcsl/${$routeParams['href']}.html`;
-		},
-		controllerAs: '$ctrl',
-		controller() {
-			document.body.setAttribute('ng-section', 'etcsl')
-		},
-	})
-	.otherwise({redirectTo: '/'});
-/**/
-
 	function toggleMenu(e) {
 		if (document.body.getAttribute('y-page') === 'home') return;
 		let next = e.currentTarget;
@@ -77,4 +64,9 @@ yodasws.page('home').setRoute({
 			list.setAttribute('hidden', '');
 		});
 	});
+});
+
+yodasws.page('etcsl').setRoute({
+	template: 'etcsl/$1.html',
+	route: /^\/etcsl\/([^\/]*)$/,
 });
