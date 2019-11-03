@@ -1,14 +1,11 @@
 /* app.json */
-angular.module('cuneiformTextCorpus', modules)
-.config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
-	$locationProvider.html5Mode(false)
-	$routeProvider.when('/', {
-		templateUrl: 'pages/home.html',
-		controllerAs: '$ctrl',
-		controller() {
-			document.body.setAttribute('ng-section', 'home')
-		},
-	})
+// import Litedom from 'res/litedom.es.js';
+yodasws.page('home').setRoute({
+	template: 'pages/home.html',
+	route: '/',
+}).on('load', () => {
+
+/*
 	.when('/etcsl/:href', {
 		templateUrl($routeParams) {
 			return `etcsl/${$routeParams['href']}.html`;
@@ -19,9 +16,10 @@ angular.module('cuneiformTextCorpus', modules)
 		},
 	})
 	.otherwise({redirectTo: '/'});
+/**/
 
 	function toggleMenu(e) {
-		if (document.body.getAttribute('ng-section') === 'home') return;
+		if (document.body.getAttribute('y-page') === 'home') return;
 		let next = e.currentTarget;
 		do next = next.nextElementSibling;
 		while (next && next.nodeName.toLowerCase() !== 'ul');
@@ -40,28 +38,28 @@ angular.module('cuneiformTextCorpus', modules)
 	// Adjustments to Display of Nav for UX
 	new MutationObserver((mutationsList) => {
 		switch (mutationsList[0].oldValue) {
-			case 'home':
-				const navLists = document.querySelectorAll('body > nav ul');
-				// No Transition
+		case 'home':
+			const navLists = document.querySelectorAll('body > nav ul');
+			// No Transition
+			navLists.forEach((list) => {
+				list.style.transition = 'none';
+				list.setAttribute('hidden', '');
+			});
+			// Reallow Transition after page change
+			setTimeout(() => {
 				navLists.forEach((list) => {
-					list.style.transition = 'none';
-					list.setAttribute('hidden', '');
+					list.style.transition = '';
 				});
-				// Reallow Transition after page change
-				setTimeout(() => {
-					navLists.forEach((list) => {
-						list.style.transition = '';
-					});
-				}, 0);
-				break;
-			case null:
-				// Be sure all menus are collapsed
-				document.querySelectorAll('body > nav ul').forEach((list) => {
-					list.setAttribute('hidden', '');
-				});
-				// Page loaded, show nav menu
-				const nav = document.querySelector('body > nav[hidden]');
-				if (nav instanceof Element) nav.removeAttribute('hidden');
+			}, 0);
+			break;
+		case null:
+			// Be sure all menus are collapsed
+			document.querySelectorAll('body > nav ul').forEach((list) => {
+				list.setAttribute('hidden', '');
+			});
+			// Page loaded, show nav menu
+			const nav = document.querySelector('body > nav[hidden]');
+			if (nav instanceof Element) nav.removeAttribute('hidden');
 		}
 	}).observe(document.body, {
 		attributeFilter: ['ng-section'],
@@ -79,4 +77,4 @@ angular.module('cuneiformTextCorpus', modules)
 			list.setAttribute('hidden', '');
 		});
 	});
-}])
+});
