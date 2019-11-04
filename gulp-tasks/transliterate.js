@@ -57,16 +57,22 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 		const files = (argv.file || [
 			'**/{1,2}.*',
 			'**/{4,5,6}.*',
-		]).map(file => ({
-			folder: 'etcsl',
-			selection: file,
-			script: 'cuneiform',
-		}));
+		]).map(file => {
+			let folder = 'etcsl';
+			if (file.includes('/')) {
+				[folder, file] = file.split('/', 2);
+			}
+			return {
+				folder,
+				selection: `${file}{,.html}`,
+				script: 'cuneiform',
+			};
+		});
 		
 		files.forEach((obj) => {
 			const json = JSON.parse(fs.readFileSync(`./src/${obj.script}.json`));
 			let stream = gulp.src([
-				`build/${obj.folder}/${obj.selection}.html`,
+				path.join('build', obj.folder, obj.selection),
 			]);
 
 			if (Array.isArray(json.remove)) {

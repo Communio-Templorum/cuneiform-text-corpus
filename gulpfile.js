@@ -624,14 +624,17 @@ gulp.task('watch', (done) => {
 	gulp.watch('./src/**/*.{js,json}', {
 		usePolling: true,
 	}, gulp.series('compile:js'));
-	gulp.watch('./src/**/*.html', {
+	gulp.watch([
+		'src/**/*.html',
+		'!src/etcsl/**/*.html',
+	], {
 		usePolling: true,
 	}, gulp.series('compile:html'));
 	gulp.watch([
 		'src/etcsl/**/*.html',
 	], {
 		usePolling: true,
-   }, gulp.series('transliterate'));
+   }, gulp.series('transliterate', 'compile:html'));
 	done();
 });
 
