@@ -442,9 +442,6 @@ function runTasks(task) {
 		}
 	});
 
-	// Init Sourcemaps
-	// stream = stream.pipe(plugins.sourcemaps.init());
-
 	// Run each task
 	if (tasks.length) for (let i=0, k=tasks.length; i<k; i++) {
 		if (['lintHTML', 'lintSass', 'lintES'].includes(tasks[i])) continue;
@@ -452,9 +449,6 @@ function runTasks(task) {
 		if (option[fileType]) option = option[fileType];
 		stream = stream.pipe(plugins[tasks[i]](option));
 	}
-
-	// Write Sourcemap
-	// stream = stream.pipe(plugins.sourcemaps.write());
 
 	// Output Files
 	return stream.pipe(gulp.dest(task.dest || options.dest));
@@ -621,7 +615,10 @@ gulp.task('watch', (done) => {
 	gulp.watch('./lib/yodasws.js', {
 		usePolling: true,
 	}, gulp.series('transfer:res'));
-	gulp.watch('./src/**/*.{js,json}', {
+	gulp.watch([
+		'./src/**/*.{js,json}',
+		'!./src/cuneiform.json',
+	], {
 		usePolling: true,
 	}, gulp.series('compile:js'));
 	gulp.watch([
@@ -631,10 +628,11 @@ gulp.task('watch', (done) => {
 		usePolling: true,
 	}, gulp.series('compile:html'));
 	gulp.watch([
+		'src/cuneiform.json',
 		'src/etcsl/**/*.html',
 	], {
 		usePolling: true,
-   }, gulp.series('transliterate', 'compile:html'));
+   }, gulp.series('transliterate'));
 	done();
 });
 

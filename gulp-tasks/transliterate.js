@@ -182,7 +182,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 			}
 
 			// Output Results
-			stream.pipe(gulp.dest(path.join(options.dest, obj.folder)))
+			stream.pipe(gulp.dest(path.join(options.dest, obj.folder !== '**' ? obj.folder : '')))
 		});
 		done();
 	},
