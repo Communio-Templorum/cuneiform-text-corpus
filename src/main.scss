@@ -29,45 +29,59 @@ body {
 
 	> main {
 		flex-grow: 1;
+
+		&:not([y-page]) {
+			display: none;
+		}
 	}
 
-	&:not([y-section]) > main {
+	&:not([y-section]) > main[y-page] {
 		display: flex;
 		flex-flow: row nowrap;
 		align-content: stretch;
 		justify-content: center;
 		align-items: center;
+	}
 
-		.loading {
-			font-size: 2rem;
-			text-align: center;
+	#y-spinner {
+		font-size: 2rem;
+		text-align: center;
 
-			svg * {
-				stroke-linejoin: round;
-				stroke-linecap: round;
+		svg {
+			display: block;
+			margin: 20vh auto 0;
+			max-width: 150px;
+		}
+
+		svg * {
+			stroke-linejoin: round;
+			stroke-linecap: round;
+		}
+
+		path {
+			fill: none;
+			stroke: black;
+			stroke-width: 10px;
+			opacity: 0.5;
+
+			&:nth-of-type(odd) {
+				animation: 2s linear infinite rotate;
+				stroke: red;
 			}
 
-			path {
-				fill: none;
-				stroke: black;
-				stroke-width: 10px;
-				opacity: 0.5;
-
-				&:nth-of-type(odd) {
-					animation: 2s linear infinite rotate;
-					stroke: red;
-				}
-
-				&:nth-of-type(even) {
-					animation: 3s linear infinite reverse rotate;
-					stroke: gold;
-				}
+			&:nth-of-type(even) {
+				animation: 3s linear infinite reverse rotate;
+				stroke: gold;
 			}
+		}
 
-			@keyframes rotate {
-				from { transform: rotate(0deg); }
-				to { transform: rotate(360deg); }
-			}
+		@keyframes rotate {
+			from { transform: rotate(0deg); }
+			to { transform: rotate(360deg); }
+		}
+
+		~ nav[y-component="topNav"] {
+			display: none;
 		}
 	}
 }
