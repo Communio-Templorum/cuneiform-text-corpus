@@ -36,7 +36,6 @@
 		"gulp-run-command": "^0.0.7",
 		"gulp-sass": "^4.0.0",
 		"gulp-sass-lint": "^1.3.2",
-		"gulp-sourcemaps": "^2.6.0",
 		"gulp-ssi": "^0.1.3",
 		"gulp-strip-css-comments": "^1.2.0",
 		"litedom": "<1.0.0",
