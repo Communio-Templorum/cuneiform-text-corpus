@@ -29,7 +29,7 @@
 		"gulp-dom": "^1.0.0",
 		"gulp-eslint": "^6.0.0",
 		"gulp-file": "^0.4.0",
-		"gulp-htmlmin": "^3.0.0",
+		"gulp-htmlmin": "^5.0.1",
 		"gulp-load-plugins": "^1.5.0",
 		"gulp-order": "^1.1.1",
 		"gulp-rm-lines": "<1.0.0",
