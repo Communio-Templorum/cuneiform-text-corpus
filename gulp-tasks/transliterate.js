@@ -1,45 +1,107 @@
 const fs = require('fs')
 const path = require('path');
 module.exports = (gulp, plugins, options, argv) => gulp.series(
-	() => {
-		const logs = false;
+	gulp.parallel(
+		(done) => {
+			const logs = false;
 
-		// Correct Markup in ETCSL Texts
-		return gulp.src([
-			`src/etcsl/**/*.html`,
+			// Correct Markup in ETCSL Texts
+			return gulp.src([
+				`src/etcsl/**/*.html`,
+			])
+				.pipe(plugins.replaceString(
+					new RegExp('<\/?(!DOCTYPE html|meta|link|head\\b|title|body)[^>]*>', 'gi'),
+					'',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('<table[^>]*>\\s*(<tbody[^>]*>\\s*)?', 'g'),
+					'<ol>\n',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('<tr><td[^>]*>(<a[^>]*>[^<]*</a>)+</td><td[^>]*>\\s*', 'g'),
+					'\t<li>',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp(`<span onMouseover=[^']+'([^']+)'[^>]*>`, 'g'),
+					'<span title="$1">',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('\\s*</td></tr>', 'g'),
+					'</li>',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('(</tbody>\\s*)?</table>', 'g'),
+					'</ol>',
+					{ logs },
+				))
+				.pipe(gulp.dest('build/etcsl'));
+		},
+		// Correct Markup in CDLI Texts
+		() => gulp.src([
+			'src/cdli/**/*.html',
 		])
 			.pipe(plugins.replaceString(
-				new RegExp(`<\/?(!DOCTYPE html|meta|link|head\b|title|body)[^>]*>`, 'gi'),
+				new RegExp('<(!DOCTYPE html)[^>]*>(.|\n)*?<table>', 'gi'),
+				'<ol>',
+				{ logs: false },
+			))
+			.pipe(plugins.replaceString(
+				new RegExp('\\s*(<tr\\b[^>]*>|<\/tr>)(\\s|\n)*', 'gi'),
 				'',
-				{ logs },
+				{ logs: false },
 			))
 			.pipe(plugins.replaceString(
-				new RegExp(`<table[^>]*>\s*(<tbody[^>]*>\s*)?`, 'g'),
-				'<ol>\n',
-				{ logs },
+				new RegExp('\\s*<td>(\&nbsp;|Q\\d{6}).*?<\/td>(\\s|\n)*', 'gi'),
+				'',
+				{ logs: false },
 			))
 			.pipe(plugins.replaceString(
-				new RegExp(`<tr><td[^>]*>(<a[^>]*>[^<]*</a>)+</td><td[^>]*>\s*`, 'g'),
-				'\t<li>',
-				{ logs },
+				new RegExp('\\s*<\/td>(\\s|\n)*', 'g'),
+				'</span></li>',
+				{ logs: false },
 			))
 			.pipe(plugins.replaceString(
-				new RegExp(`<span onMouseover=[^']+'([^']+)'[^>]*>`, 'g'),
-				'<span title="$1">',
-				{ logs },
+				new RegExp('\\s*<td[^>]*>(\\s|\n)*', 'g'),
+				'\n\t<li><span>',
+				{ logs: false },
 			))
 			.pipe(plugins.replaceString(
-				new RegExp(`\s*</td></tr>`, 'g'),
-				'</li>',
-				{ logs },
+				new RegExp('<\/table>(.|\n)*?</html>', 'gi'),
+				'\n</ol>',
+				{ logs: false },
 			))
 			.pipe(plugins.replaceString(
-				new RegExp(`(</tbody>\s*)?</table>`, 'g'),
-				'</ol>',
-				{ logs },
+				new RegExp('&amp;', 'g'),
+				' / ',
+				{ logs: false },
 			))
-			.pipe(gulp.dest('build/etcsl'));
-	},
+			.pipe(plugins.replaceString(
+				new RegExp('[[\\]#\\|]', 'gi'),
+				'',
+				{ logs: false },
+			))
+			.pipe(plugins.replaceString(
+				new RegExp('{', 'g'),
+				'<sup>',
+				{ logs: false },
+			))
+			.pipe(plugins.replaceString(
+				new RegExp('}', 'g'),
+				'</sup>',
+				{ logs: false },
+			))
+			.pipe(plugins.replaceString(
+				new RegExp(' ', 'g'),
+				'</span> <span>',
+				{ logs: false },
+			))
+			.pipe(gulp.dest('build/cdli')),
+	),
 	(done) => {
 		// Convert pattern to RegExp
 		const patternToRegExp = (pattern) => {
@@ -68,7 +130,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 				script: 'cuneiform',
 			};
 		});
-		
+
 		files.forEach((obj) => {
 			const json = JSON.parse(fs.readFileSync(`./src/${obj.script}.json`));
 			let stream = gulp.src([
@@ -175,7 +237,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 				json.ruby.forEach((ruby) => {
 					stream = stream.pipe(plugins.dom(rubyReplace(ruby)))
 						.pipe(plugins.replaceString(
-							new RegExp(`<\/?(!DOCTYPE html|html|body|head\b)[^>]*>`, 'gi'),
+							new RegExp(`<\/?(!DOCTYPE html|html|body|head\\b)[^>]*>`, 'gi'),
 							'',
 						));
 				});
