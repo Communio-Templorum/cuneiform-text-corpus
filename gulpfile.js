@@ -475,6 +475,7 @@ function runTasks(task) {
 		src: [
 			'src/**/*.html',
 			'!src/etcsl/**/*.html',
+			'!src/enuma-elish.html',
 			'!**/includes/**/*.html'
 		],
 		tasks: [
@@ -571,12 +572,14 @@ gulp.task('watch', (done) => {
 	gulp.watch([
 		'src/**/*.html',
 		'!src/etcsl/**/*.html',
+		'!src/enuma-elish.html',
 	], {
 		usePolling: true,
 	}, gulp.series('compile:html'));
 	gulp.watch([
 		'src/cuneiform.json',
 		'src/etcsl/**/*.html',
+		'src/enuma-elish.html',
 	], {
 		usePolling: true,
    }, gulp.series('transliterate'));

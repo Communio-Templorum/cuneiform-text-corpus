@@ -69,6 +69,12 @@ yodasws.page('home').setRoute({
 	route: '/',
 });
 
+yodasws.page('enuma-elish').setRoute({
+	template: 'enuma-elish.html',
+	canonicalRoute: '/enuma-elish/',
+	route: /^\/enuma-elish\/?$/,
+});
+
 yodasws.page('etcsl').setRoute({
 	template: 'etcsl/$1.html',
 	route: /^\/etcsl\/([^\/]*)$/,

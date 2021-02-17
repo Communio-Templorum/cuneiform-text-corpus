@@ -1,16 +1,15 @@
 const fs = require('fs')
 const path = require('path');
+const logs = false;
 module.exports = (gulp, plugins, options, argv) => gulp.series(
 	gulp.parallel(
+		// Correct Markup in ETCSL Texts
 		(done) => {
-			const logs = false;
-
-			// Correct Markup in ETCSL Texts
 			return gulp.src([
 				`src/etcsl/**/*.html`,
 			])
 				.pipe(plugins.replaceString(
-					new RegExp('<\/?(!DOCTYPE html|meta|link|head\\b|title|body)[^>]*>', 'gi'),
+					new RegExp('<\/?(!DOCTYPE html|html|meta|link|head\\b|title|body)[^>]*>', 'gi'),
 					'',
 					{ logs },
 				))
@@ -48,59 +47,86 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 			.pipe(plugins.replaceString(
 				new RegExp('<(!DOCTYPE html)[^>]*>(.|\n)*?<table>', 'gi'),
 				'<ol>',
-				{ logs: false },
+				{ logs },
 			))
 			.pipe(plugins.replaceString(
 				new RegExp('\\s*(<tr\\b[^>]*>|<\/tr>)(\\s|\n)*', 'gi'),
 				'',
-				{ logs: false },
+				{ logs },
 			))
 			.pipe(plugins.replaceString(
 				new RegExp('\\s*<td>(\&nbsp;|Q\\d{6}).*?<\/td>(\\s|\n)*', 'gi'),
 				'',
-				{ logs: false },
+				{ logs },
 			))
 			.pipe(plugins.replaceString(
 				new RegExp('\\s*<\/td>(\\s|\n)*', 'g'),
 				'</span></li>',
-				{ logs: false },
+				{ logs },
 			))
 			.pipe(plugins.replaceString(
 				new RegExp('\\s*<td[^>]*>(\\s|\n)*', 'g'),
 				'\n\t<li><span>',
-				{ logs: false },
+				{ logs },
 			))
 			.pipe(plugins.replaceString(
 				new RegExp('<\/table>(.|\n)*?</html>', 'gi'),
 				'\n</ol>',
-				{ logs: false },
+				{ logs },
 			))
 			.pipe(plugins.replaceString(
 				new RegExp('&amp;', 'g'),
 				' / ',
-				{ logs: false },
+				{ logs },
 			))
 			.pipe(plugins.replaceString(
 				new RegExp('[[\\]#\\|]', 'gi'),
 				'',
-				{ logs: false },
+				{ logs },
 			))
 			.pipe(plugins.replaceString(
 				new RegExp('{', 'g'),
 				'<sup>',
-				{ logs: false },
+				{ logs },
 			))
 			.pipe(plugins.replaceString(
 				new RegExp('}', 'g'),
 				'</sup>',
-				{ logs: false },
+				{ logs },
 			))
 			.pipe(plugins.replaceString(
 				new RegExp(' ', 'g'),
 				'</span> <span>',
-				{ logs: false },
+				{ logs },
 			))
 			.pipe(gulp.dest('build/cdli')),
+		// Correct markup in Enuma Elish
+		() => gulp.src([
+			'src/enuma-elish.html',
+		])
+			.pipe(plugins.replaceString(
+				new RegExp('&#x20;', 'g'),
+				' ',
+				{ logs },
+			))
+					/*
+			.pipe(plugins.replaceString(
+				new RegExp('<br\\s*\/?>(\\s|\n)*', 'g'),
+				'</li>\n<li>',
+				{ logs },
+			))
+			/**/
+			.pipe(plugins.replaceString(
+				new RegExp('<strong>([a-z0-9.-]+)</strong>', 'g'),
+				'<span title="$1">$1</span>',
+				{ logs },
+			))
+			.pipe(plugins.replaceString(
+				new RegExp('-', 'g'),
+				'<wbr>',
+				{ logs },
+			))
+			.pipe(gulp.dest('build')),
 	),
 	(done) => {
 		// Convert pattern to RegExp
@@ -113,14 +139,14 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 			}
 			return pattern;
 		};
-		const logs = false;
 
 		// Now Transliterate!
-		const files = (argv.file || [
-			'**/{1,2}.*',
-			'**/{4,5,6}.*',
+		(argv.file || [
+			'etcsl/{1,2,3,4,5,6}.*',
+			'cdli/Q*.html',
+			'enuma-elish.html',
 		]).map(file => {
-			let folder = 'etcsl';
+			let folder = '';
 			if (file.includes('/')) {
 				[folder, file] = file.split('/', 2);
 			}
@@ -129,9 +155,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 				selection: `${file}{,.html}`,
 				script: 'cuneiform',
 			};
-		});
-
-		files.forEach((obj) => {
+		}).forEach((obj) => {
 			const json = JSON.parse(fs.readFileSync(`./src/${obj.script}.json`));
 			let stream = gulp.src([
 				path.join('build', obj.folder, obj.selection),
@@ -158,6 +182,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 				});
 			}
 
+			// Transliterate individual cuneiform signs
 			if (Array.isArray(json.unicode)) {
 				json.unicode = json.unicode.reverse().filter((d) => {
 					d = d.pattern || d[0];
@@ -167,7 +192,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 					return true;
 				});
 				// Break up compounds and search for constituent characters
-				// e.g., ed3-de3-a-ba => [ ed3, de3, a, ba ] => [ &#x12313;&#x1207a;, &#x12248;, &#x12000;, &#x12040; ]
+				// e.g., ed3-de3-a-ba => [ ed3, de3, a, ba ] => [ &#x12313;&#x200D;&#x1207a;, &#x12248;, &#x12000;, &#x12040; ]
 				stream = stream.pipe(plugins.replaceString(/>\s*(&#x12[0-9a-f]{3};)?(?:|[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû×]+)(?:&#x12[0-9a-f]{3};|[-\.](&#x12[0-9a-f]{3};)?(?:[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû×]+))*\s*</gi, (word) => {
 					word = word.replace(/^>\s*|\s*<$/g, '');
 					const r = word.split(/[-\.]|(&#x12[0-9a-f]{3};)/i).map((p) => {
