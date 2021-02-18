@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path');
 const logs = false;
+
 function elementLang(el) {
 	while (el && typeof el.hasAttribute === 'function') {
 		if (el.hasAttribute('lang')) {
@@ -9,6 +10,7 @@ function elementLang(el) {
 		el = el.parentElement;
 	}
 }
+
 module.exports = (gulp, plugins, options, argv) => gulp.series(
 	// First, simplify markup and wrap with <ruby>
 	gulp.parallel(
@@ -86,18 +88,32 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 					{ logs },
 				))
 				.pipe(plugins.replaceString(
-					new RegExp('\\s*<td>(\&nbsp;|Q\\d{6}).*?<\/td>(\\s|\n)*', 'gi'),
+					new RegExp('\\s*<td>(Q\\d{6}).*?<\/td>(\\s|\n)*', 'gi'),
+					'\n\t<li>',
+					{ logs },
+				))
+			// Remove useless empty rows
+				.pipe(plugins.replaceString(
+					new RegExp('\\s*<td>\&nbsp;<\/td>(\\s|\n)*', 'gi'),
 					'',
 					{ logs },
 				))
+			// An alternate writing of the same line
 				.pipe(plugins.replaceString(
-					new RegExp('\\s*<\/td>(\\s|\n)*', 'g'),
-					'</span></li>',
+					new RegExp('\\s*<td>\&nbsp;.*?<\/td>(\\s|\n)*', 'gi'),
+					'<br>',
 					{ logs },
 				))
+			// Wrap each cuneiform word in <ruby>
 				.pipe(plugins.replaceString(
-					new RegExp('\\s*<td[^>]*>(\\s|\n)*', 'g'),
-					'\n\t<li><span>',
+					new RegExp('\\s*<td[^>]*>(.+?)<\/td>(?:\\s|\n)*', 'g'),
+					(str, words) => {
+						words = words.trim();
+						return words.split(' ').map((word) => {
+							return `<ruby lang="und"><rb lang="und">${word}</rb><rt lang="und-Latn">${word}</rt></ruby>`;
+							// TODO: Handle numbers: 1(diš)
+						}).join(' ');
+					},
 					{ logs },
 				))
 				.pipe(plugins.replaceString(
@@ -126,8 +142,8 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 					{ logs },
 				))
 				.pipe(plugins.replaceString(
-					new RegExp(' ', 'g'),
-					'</span> <span>',
+					new RegExp('\\.\\.\\.', 'g'),
+					'&hellip;',
 					{ logs },
 				))
 				.pipe(gulp.dest('build/cdli'));
@@ -139,7 +155,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 			])
 				.pipe(plugins.replaceString(
 					new RegExp('<strong>([a-z0-9.-]+)</strong>', 'g'),
-					'<ruby lang="sux" translate="no"><rb translate="no">$1</rb><rt lang="sux-Latn" translate="no">$1</rt></ruby>',
+					'<ruby lang="akk" translate="no"><rb translate="no">$1</rb><rt lang="akk-Latn" translate="no">$1</rt></ruby>',
 					{ logs },
 				))
 				.pipe(gulp.dest('build'));
