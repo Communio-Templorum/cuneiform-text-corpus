@@ -138,18 +138,8 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 				'src/enuma-elish.html',
 			])
 				.pipe(plugins.replaceString(
-					new RegExp('&#x20;', 'g'),
-					' ',
-					{ logs },
-				))
-				.pipe(plugins.replaceString(
 					new RegExp('<strong>([a-z0-9.-]+)</strong>', 'g'),
-					'<span title="$1">$1</span>',
-					{ logs },
-				))
-				.pipe(plugins.replaceString(
-					new RegExp('-', 'g'),
-					'<wbr>',
+					'<ruby lang="sux" translate="no"><rb translate="no">$1</rb><rt lang="sux-Latn" translate="no">$1</rt></ruby>',
 					{ logs },
 				))
 				.pipe(gulp.dest('build'));
