@@ -229,7 +229,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 			}));
 
 			// Remove superscript around cuneiform
-			stream.pipe(plugins.replaceString(/<sup>((?:&#x12[0-9a-f]{3};)+)<\/sup>/gi, (str, signs) => signs, { logs }))
+			stream.pipe(plugins.replaceString(/<sup>((?:\uD808[\uDC00-\uDFFF]|\uD809[\uDC00-\uDD4F])+)<\/sup>/gi, (str, signs) => signs, { logs }))
 
 			// Remove unwanted HTML for subpage content
 			stream = stream.pipe(plugins.replaceString(
