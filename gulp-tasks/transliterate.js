@@ -1,18 +1,22 @@
 const fs = require('fs')
 const path = require('path');
 const logs = false;
+function elementLang(el) {
+	while (el && typeof el.hasAttribute === 'function') {
+		if (el.hasAttribute('lang')) {
+			return el.getAttribute('lang');
+		}
+		el = el.parentElement;
+	}
+}
 module.exports = (gulp, plugins, options, argv) => gulp.series(
+	// First, simplify markup and wrap with <ruby>
 	gulp.parallel(
 		// Correct Markup in ETCSL Texts
-		(done) => {
+		() => {
 			return gulp.src([
 				`src/etcsl/**/*.html`,
 			])
-				.pipe(plugins.replaceString(
-					new RegExp('<\/?(!DOCTYPE html|html|meta|link|head\\b|title|body)[^>]*>', 'gi'),
-					'',
-					{ logs },
-				))
 				.pipe(plugins.replaceString(
 					new RegExp('<table[^>]*>\\s*(<tbody[^>]*>\\s*)?', 'g'),
 					'<ol>\n',
@@ -38,95 +42,118 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 					'</ol>',
 					{ logs },
 				))
+				.pipe(plugins.dom(function () {
+					this.querySelectorAll('span[title]').forEach((el) => {
+						let html = ' <ruby ';
+						if (el.hasAttribute('class')) {
+							html += `class="${el.getAttribute('class') || ''}" `;
+						}
+						html += `lang="${elementLang(el) || 'sux'}" translate="no"><rb translate="no">${el.innerHTML}</rb>`;
+
+						if (el.getAttribute('title').indexOf('(') > -1) {
+							const [rt, rtc] = el.getAttribute('title').split(/\s*\([^\)]*\)\s*/g);
+							if (rt && rt !== 'X' && rt !== '…') {
+								html += `<rt lang="${elementLang(el) || 'sux'}-Latn" translate="no">${rt}</rt>`;
+							}
+							if (rtc && rtc !== 'X' && rtc !== '…') {
+								html += `<rtc lang="en" translate="yes">${rtc}</rtc>`;
+							}
+						} else {
+							const rtc = el.getAttribute('title');
+							if (rtc && rtc !== 'X' && rtc !== '…') {
+								html += `<rtc lang="en" translate="yes">${rtc}</rtc>`;
+							}
+						}
+						html += `</ruby> `;
+						el.outerHTML = html;
+					});
+				}))
 				.pipe(gulp.dest('build/etcsl'));
 		},
 		// Correct Markup in CDLI Texts
-		() => gulp.src([
-			'src/cdli/**/*.html',
-		])
-			.pipe(plugins.replaceString(
-				new RegExp('<(!DOCTYPE html)[^>]*>(.|\n)*?<table>', 'gi'),
-				'<ol>',
-				{ logs },
-			))
-			.pipe(plugins.replaceString(
-				new RegExp('\\s*(<tr\\b[^>]*>|<\/tr>)(\\s|\n)*', 'gi'),
-				'',
-				{ logs },
-			))
-			.pipe(plugins.replaceString(
-				new RegExp('\\s*<td>(\&nbsp;|Q\\d{6}).*?<\/td>(\\s|\n)*', 'gi'),
-				'',
-				{ logs },
-			))
-			.pipe(plugins.replaceString(
-				new RegExp('\\s*<\/td>(\\s|\n)*', 'g'),
-				'</span></li>',
-				{ logs },
-			))
-			.pipe(plugins.replaceString(
-				new RegExp('\\s*<td[^>]*>(\\s|\n)*', 'g'),
-				'\n\t<li><span>',
-				{ logs },
-			))
-			.pipe(plugins.replaceString(
-				new RegExp('<\/table>(.|\n)*?</html>', 'gi'),
-				'\n</ol>',
-				{ logs },
-			))
-			.pipe(plugins.replaceString(
-				new RegExp('&amp;', 'g'),
-				' / ',
-				{ logs },
-			))
-			.pipe(plugins.replaceString(
-				new RegExp('[[\\]#\\|]', 'gi'),
-				'',
-				{ logs },
-			))
-			.pipe(plugins.replaceString(
-				new RegExp('{', 'g'),
-				'<sup>',
-				{ logs },
-			))
-			.pipe(plugins.replaceString(
-				new RegExp('}', 'g'),
-				'</sup>',
-				{ logs },
-			))
-			.pipe(plugins.replaceString(
-				new RegExp(' ', 'g'),
-				'</span> <span>',
-				{ logs },
-			))
-			.pipe(gulp.dest('build/cdli')),
+		() => {
+			return gulp.src([
+				'src/cdli/**/*.html',
+			])
+				.pipe(plugins.replaceString(
+					new RegExp('<(!DOCTYPE html)[^>]*>(.|\n)*?<table>', 'gi'),
+					'<ol>',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('\\s*(<tr\\b[^>]*>|<\/tr>)(\\s|\n)*', 'gi'),
+					'',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('\\s*<td>(\&nbsp;|Q\\d{6}).*?<\/td>(\\s|\n)*', 'gi'),
+					'',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('\\s*<\/td>(\\s|\n)*', 'g'),
+					'</span></li>',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('\\s*<td[^>]*>(\\s|\n)*', 'g'),
+					'\n\t<li><span>',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('<\/table>(.|\n)*?</html>', 'gi'),
+					'\n</ol>',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('&amp;', 'g'),
+					' / ',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('[[\\]#\\|]', 'gi'),
+					'',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('{', 'g'),
+					'<sup>',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('}', 'g'),
+					'</sup>',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp(' ', 'g'),
+					'</span> <span>',
+					{ logs },
+				))
+				.pipe(gulp.dest('build/cdli'));
+		},
 		// Correct markup in Enuma Elish
-		() => gulp.src([
-			'src/enuma-elish.html',
-		])
-			.pipe(plugins.replaceString(
-				new RegExp('&#x20;', 'g'),
-				' ',
-				{ logs },
-			))
-					/*
-			.pipe(plugins.replaceString(
-				new RegExp('<br\\s*\/?>(\\s|\n)*', 'g'),
-				'</li>\n<li>',
-				{ logs },
-			))
-			/**/
-			.pipe(plugins.replaceString(
-				new RegExp('<strong>([a-z0-9.-]+)</strong>', 'g'),
-				'<span title="$1">$1</span>',
-				{ logs },
-			))
-			.pipe(plugins.replaceString(
-				new RegExp('-', 'g'),
-				'<wbr>',
-				{ logs },
-			))
-			.pipe(gulp.dest('build')),
+		() => {
+			return gulp.src([
+				'src/enuma-elish.html',
+			])
+				.pipe(plugins.replaceString(
+					new RegExp('&#x20;', 'g'),
+					' ',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('<strong>([a-z0-9.-]+)</strong>', 'g'),
+					'<span title="$1">$1</span>',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('-', 'g'),
+					'<wbr>',
+					{ logs },
+				))
+				.pipe(gulp.dest('build'));
+		},
 	),
 	(done) => {
 		// Convert pattern to RegExp
@@ -139,6 +166,17 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 			}
 			return pattern;
 		};
+
+		const json = JSON.parse(fs.readFileSync(`./src/cuneiform.json`));
+		if (Array.isArray(json.unicode)) {
+			json.unicode = json.unicode.reverse().filter((d) => {
+				d = d.pattern || d[0];
+				// Don't replace numbers yet
+				if (d.match(/^[0-9,]+$/)) return false;
+				if (d.match(/\b(or|one|two|three|four|five|six|seven|eight|nine)\b/)) return false;
+				return true;
+			});
+		}
 
 		// Now Transliterate!
 		(argv.file || [
@@ -153,120 +191,62 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 			return {
 				folder,
 				selection: `${file}{,.html}`,
-				script: 'cuneiform',
 			};
 		}).forEach((obj) => {
-			const json = JSON.parse(fs.readFileSync(`./src/${obj.script}.json`));
 			let stream = gulp.src([
 				path.join('build', obj.folder, obj.selection),
 			]);
 
-			if (Array.isArray(json.remove)) {
-				stream = stream.pipe(plugins.replaceString(new RegExp(`(?:${json.remove.join('|')})`, 'g'), '', { logs }));
-			}
+			stream = stream.pipe(plugins.dom(function () {
+				this.querySelectorAll('rb').forEach((rb) => {
+					if (Array.isArray(json.remove)) {
+						rb.innerHTML = rb.innerHTML.replace(new RegExp(`(?:${json.remove.join('|')})`, 'g'), '');
+					}
 
-			if (Array.isArray(json['special-chars'])) {
-				json['special-chars'].forEach((d) => {
-					stream = stream.pipe(plugins.replaceString(patternToRegExp(d[0]), d[1], { logs }));
-				});
-			}
+					// Transliterate special characters and special/peculiar words
+					let list = []
+					if (Array.isArray(json['special-chars'])) {
+						list = list.concat(json['special-chars']);
+					}
+					if (Array.isArray(json.dictionary)) {
+						list = list.concat(json.dictionary);
+					}
+					list.forEach((d) => {
+						rb.innerHTML = rb.innerHTML.replace(patternToRegExp(d[0]), d[1]);
+					});
 
-			// Transliterate special/peculiar words
-			if (Array.isArray(json.dictionary)) {
-				json.dictionary.forEach((d) => {
-					stream = stream.pipe(plugins.replaceString({
-						pattern: patternToRegExp(`>\\s?${d.pattern || d[0]}\\s?<`),
-						replacement: `>${d.replacement || d[1]}<`,
-						logs: d.logs || logs,
-					}));
-				});
-			}
+					// Transliterate number codes
+					if (Array.isArray(json.numbers)) {
+						rb.innerHTML = rb.innerHTML.replace(/^NU:([^<]*)+$/i, (str, signs) => signs.split(/-|(&#x12[0-9a-f]{3};)/i).map((s) => {
+							const sym = json.numbers.find(d => new RegExp(`^${d.pattern || d[0]}$`).test(s));
+							return (typeof sym === 'object' && (sym.replacement || sym[1])) || s;
+						}).join(''));
+					}
 
-			// Transliterate individual cuneiform signs
-			if (Array.isArray(json.unicode)) {
-				json.unicode = json.unicode.reverse().filter((d) => {
-					d = d.pattern || d[0];
-					// Don't replace numbers yet
-					if (d.match(/^[0-9,]+$/)) return false;
-					if (d.match(/\b(or|one|two|three|four|five|six|seven|eight|nine)\b/)) return false;
-					return true;
-				});
-				// Break up compounds and search for constituent characters
-				// e.g., ed3-de3-a-ba => [ ed3, de3, a, ba ] => [ &#x12313;&#x200D;&#x1207a;, &#x12248;, &#x12000;, &#x12040; ]
-				stream = stream.pipe(plugins.replaceString(/>\s*(&#x12[0-9a-f]{3};)?(?:|[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû×]+)(?:&#x12[0-9a-f]{3};|[-\.](&#x12[0-9a-f]{3};)?(?:[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû×]+))*\s*</gi, (word) => {
-					word = word.replace(/^>\s*|\s*<$/g, '');
-					const r = word.split(/[-\.]|(&#x12[0-9a-f]{3};)/i).map((p) => {
-						let sym;
-						json.unicode.forEach((d) => {
-							if (sym) return;
-							if (new RegExp(`^${d.pattern || d[0]}$`).test(p)) {
-								sym = d.replacement || d[1];
-							}
+					// Transliterate individual cuneiform signs
+					if (Array.isArray(json.unicode)) {
+						// Break up compounds and search for constituent characters
+						// e.g., ed3-de3-a-ba => [ ed3, de3, a, ba ] => [ &#x12313;&#x200D;&#x1207a;, &#x12248;, &#x12000;, &#x12040; ]
+						rb.innerHTML = rb.innerHTML.replace(/\s*(&#x12[0-9a-f]{3};)?(?:[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû×]+)(?:&#x12[0-9a-f]{3};|[-\.](&#x12[0-9a-f]{3};)?(?:[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû×]+))*\s*/gi, (word) => {
+							word = word.replace(/^\s*|\s*$/g, '');
+							return word.split(/[-\.]|(&#x12[0-9a-f]{3};)/i).map((p) => {
+								const sym = json.unicode.find(d => new RegExp(`^${d.pattern || d[0]}$`).test(p));
+								return (typeof sym === 'object' && (sym.replacement || sym[1])) || p;
+							}).join('');
 						});
-						return sym || p;
-					}).join('');
-					return `>${r}<`;
-				}, { logs }));
-			}
-
-			// Transliterate Number Codes
-			if (Array.isArray(json.numbers)) {
-				stream = stream.pipe(plugins.replaceString(/>NU:([^<]*)+</gi, (str, signs) => {
-					const r = signs.split(/-|(&#x12[0-9a-f]{3};)/i).map((s) => {
-						let sym;
-						json.numbers.forEach((d) => {
-							if (sym) return;
-							if (new RegExp(`^${d.pattern || d[0]}$`).test(s)) {
-								sym = d.replacement || d[1];
-							}
-						});
-						return sym || s;
-					}).join('');
-					return `>${r}<`;
-				}, { logs }));
-			}
+					}
+				});
+			}));
 
 			// Remove superscript around cuneiform
 			stream.pipe(plugins.replaceString(/<sup>((?:&#x12[0-9a-f]{3};)+)<\/sup>/gi, (str, signs) => signs, { logs }))
 
-			// Now to wrap our cuneiform in ruby
-			if (json.ruby) {
-				if (!Array.isArray(json.ruby)) {
-					json.ruby = [json.ruby];
-				}
-
-				function rubyReplace(ruby) {
-					return function () {
-						this.querySelectorAll(ruby.query).forEach((el) => {
-							let html = ` <ruby class="${el.getAttribute('class') || ''}" lang="${ruby['@lang'] || 'en'}" translate="no">${eval(ruby.rb)}`;
-							[
-								'rt',
-								'rtc',
-							].forEach((tag) => {
-								if (!Array.isArray(ruby[tag])) {
-									ruby[tag] = [ruby[tag]];
-								}
-								ruby[tag].forEach((val) => {
-									const txt = eval(val.eval);
-									if (txt && txt !== 'X' && txt !== '…') {
-										html += `<${tag} lang="${val['@lang'] || 'en'}" translate="${tag === 'rt' ? 'no' : 'yes'}">${txt}`;
-									}
-								});
-							});
-							html += `</ruby> `;
-							el.outerHTML = html;
-						});
-					}
-				}
-
-				json.ruby.forEach((ruby) => {
-					stream = stream.pipe(plugins.dom(rubyReplace(ruby)))
-						.pipe(plugins.replaceString(
-							new RegExp(`<\/?(!DOCTYPE html|html|body|head\\b)[^>]*>`, 'gi'),
-							'',
-						));
-				});
-			}
+			// Remove unwanted HTML for subpage content
+			stream = stream.pipe(plugins.replaceString(
+				new RegExp('</?(!DOCTYPE html|html|head\\b|meta|link|body)[^>]*>', 'gi'),
+				'',
+				{ logs },
+			));
 
 			// Output Results
 			stream.pipe(gulp.dest(path.join(options.dest, obj.folder !== '**' ? obj.folder : '')))

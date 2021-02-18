@@ -582,7 +582,7 @@ gulp.task('watch', (done) => {
 		'src/enuma-elish.html',
 	], {
 		usePolling: true,
-   }, gulp.series('transliterate'));
+	}, gulp.series('transliterate'));
 	done();
 });
 

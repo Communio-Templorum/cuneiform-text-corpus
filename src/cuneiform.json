@@ -25,53 +25,53 @@
 		["(&#x0{,2}[Ff][Aa];|u&#x0?301;)","ú"],
 		["(&#x0{,2}[Dd][Bb];|U&#x0?302;)","Û"],
 		["(&#x0{,2}[Ff][Bb];|u&#x0?302;)","û"],
-		["<sup>d</sup>","&#x1202D;"],
-		["<sup>ki</sup>","&#x121A0;"],
-		["<sup>dug</sup>","&#x12081;"],
-		["<sup>ĝiš</sup>","&#x12111;"],
-		["<sup>kuš</sup>","&#x122E2;"],
-		["<sup>na4</sup>","&#x1224C;&#x200D;&#x12313;"],
-		["<sup>tum9</sup>","&#x1214E;"],
-		["<sup>mušen</sup>","&#x12137;"],
-		["-?&lt;[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû]+&gt;",""]
+		["<sup>d</sup>","-AN-"],
+		["<sup>ki</sup>","-KI-"],
+		["<sup>dug</sup>","-DUG-"],
+		["<sup>ĝiš</sup>","-GIŠ-"],
+		["<sup>kuš</sup>","-KUŠ-"],
+		["<sup>na4</sup>","-na4-"],
+		["<sup>tum9</sup>","-TUM9-"],
+		["<sup>mušen</sup>","-mušen-"],
+		["-?&lt;[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû]+&gt;",""],
+		["^\\s*-|-\\s*$",""],
+		["--","-"]
 	],
 	"dictionary":[
-		["a'","AḪ"],
-		["(Abzu|apsu)","ZU.AB"],
-		["(Adab|adab)(&#x121A0;)?","A12-NUN&#x121A0;"],
-		["(Akshak|akšak)(&#x121A0;)?","AḪ6&#x121A0;"],
-		["Alulim","A2-LU-LIM"],
-		["(Bad-tibira|bad3-tibira)(&#x121A0;)?","BAD3-DUB-NAGAR&#x121A0;"],
-		["(Dilmun|dilmun)(&#x121A0;)?","NI-TUKU&#x121A0;"],
-		["Dumuzid","AN-DUMU-ZID"],
-		["(Elam|elam)(&#x121A0;)?","NIM-MA&#x121A0;"],
-		["Enmerkar","EN-ME-ER-KAR2"],
-		["(Eridu|eridug)(&#x121A0;)?","eridu&#x121A0;"],
-		["(Gilgamesh|gilgameš2)","GIŠ-BÍL-GA-MES"],
-		["&#x1202D;(Gilgamesh|gilgameš2)","AN-GIŠ-BÍL-GA-MES"],
-		["&#x12111;tukul","GIŠ-TUKUL"],
-		["&#x12111;tukul-bi","GIŠ-TUKUL-BI"],
-		["(Ĝušur|ĝušurx)","GIŠ-UR3"],
-		["gudug","ḪI×NUN-ME"],
-		["ĝarza","PA-AN"],
-		["kuara&#x121A0;","kuar<sup>?</sup>-A&#x121A0;"],
-		["(Kullassina-bel|kul2-la-si2-na-be-el)","KUL2-LA-SI2-NA-BE-EL"],
-		["Nanniya","NA-AN-NI-ia"],
-		["(&#x1202D;)?nin-?ma[ḫh]","AN-NIN-ḪUR.SAG"],
-		["(&#x1202D;)?([Nn]in[-.]?ḫur[-.]?saĝ([-.]?ĝa2)?|Ninkharsag|Ninharsag)([-.]?ke4)?","AN-MUNUS-TUG2-PA-DUN3"],
-		["Nudimmud","NU-DIM-mud"],
-		["(sagi|sagia)","SILA3.ŠU.GABA"],
-		["saman","EŠ2-SUD-NUN-EŠ2-TU"],
-		["(Šuruppag|šuruppag)(&#x121A0;)?","SU-KUR-RU&#x121A0;"],
-		["(&#x1202D;)?Tiamat","AN-TI-amat"],
-		["(Ubara-Tutu|Ubara-tutu|Ubaratutu)","UBARA-tu3-tu3"],
-		["uga&#x12137;","U2-NAGA-GA-ḪU"],
-		["ugnim","KI.SU.LU.UB2.GAR"],
-		["ur24","UR2-LIMMU2"],
-		["(Ur-niĝin3|ur-niĝin3)","UR.U.UD.KID"],
-		["(Ur|Urim|urim2)(&#x121A0;)?","URI3-ÚNU&#x121A0;"],
-		["zamug\\(DUB\\)<sup>za-mug</sup>","DUB-za-mug"],
-		["(Zimbir|zimbir)(&#x121A0;)?","UD-&#x12112;NUN&#x121A0;"]
+		["\\b(a['\\u2019])","AḪ"],
+		["\\b(Abzu|apsu)\\b","ZU.AB"],
+		["\\b(Adab|adab)(-KI|\\b)","A12-NUN-KI"],
+		["\\b(Akshak|akšak)(-KI|\\b)","AḪ6-KI"],
+		["\\b(Alulim)\\b","A2-LU-LIM"],
+		["\\b(Bad-tibira|bad3-tibira)(-KI|\\b)","BAD3-DUB-NAGAR-KI"],
+		["\\b(Dilmun|dilmun)(-KI|\\b)","NI-TUKU-KI"],
+		["\\b(Dumuzid)\\b","AN-DUMU-ZID"],
+		["\\b(Elam|elam)(-KI|\\b)","NIM-MA-KI"],
+		["\\b(Enmerkar)\\b","EN-ME-ER-KAR2"],
+		["\\b(Eridu|eridug)(-KI|\\b)","eridu-KI"],
+		["\\b(Gilgamesh|gilgameš2)\\b","GIŠ-BÍL-GA-MES"],
+		["GIŠ-tukul\\b","GIŠ-TUKUL"],
+		["\\b(Ĝušur|ĝušurx)\\b","GIŠ-UR3"],
+		["\\b(gudug)\\b","ḪI×NUN-ME"],
+		["\\b(ĝarza)\\b","PA-AN"],
+		["\\b(kuara)(-KI|\\b)","kuar<sup>?</sup>-A-KI"],
+		["\\b(Kullassina-bel|kul2-la-si2-na-be-el)\\b","KUL2-LA-SI2-NA-BE-EL"],
+		["\\b(Nanniya)\\b","NA-AN-NI-ia"],
+		["(AN-|\\b)nin-?ma[ḫh]\\b","AN-NIN-ḪUR.SAG"],
+		["(AN-|\\b)([Nn]in[-.]?ḫur[-.]?saĝ([-.]?ĝa2)?|Ninkharsag|Ninharsag)([-.]?ke4|\\b)","AN-MUNUS-TUG2-PA-DUN3"],
+		["\\b(Nudimmud)\\b","NU-DIM-mud"],
+		["\\b(sagi|sagia)\\b","SILA3.ŠU.GABA"],
+		["\\b(saman)\\b","EŠ2-SUD-NUN-EŠ2-TU"],
+		["\\b(Šuruppag|šuruppag)(-KI|\\b)","SU-KUR-RU-KI"],
+		["(AN-|\\b)Tiamat\\b","AN-TI-amat"],
+		["\\b(Ubara-Tutu|Ubara-tutu|Ubaratutu)\\b","UBARA-tu3-tu3"],
+		["\\b(uga)-mušen","U2-NAGA-GA-ḪU"],
+		["\\b(ugnim)\\b","KI.SU.LU.UB2.GAR"],
+		["\\b(ur24)\\b","UR2-LIMMU2"],
+		["\\b(Ur-niĝin3|ur-niĝin3)\\b","UR.U.UD.KID"],
+		["\\b(Ur|Urim|urim2)(-KI|\\b)","URI3-ÚNU-KI"],
+		["\\b(zamug)\\(DUB\\)<sup>za-mug</sup>","DUB-za-mug"],
+		["\\b(Zimbir|zimbir)(-KI|\\b)","UD-ul3-NUN-KI"]
 	],
 	"unicode":[
 		["(A|a|duru5)","&#x12000;"],
@@ -877,7 +877,7 @@
 		["(TAB|tab)","&#x122F0;"],
 		["TAB / TAB NI / NI DIŠ / DIŠ","&#x122F1;"],
 		["TAB squared","&#x122F2;"],
-		["(TAG|tag)","&#x122F3;"],
+		["(TAG|tag|šum)","&#x122F3;"],
 		["TAG×BI","&#x122F4;"],
 		["TAG×GUD","&#x122F5;"],
 		["TAG×ŠE","&#x122F6;"],
@@ -1169,37 +1169,5 @@
 		["(vertical colon)","&#x12471;"],
 		["(diagonal colon)","&#x12472;"],
 		["(diagonal tricolon)","&#x12473;"]
-	],
-	"ruby": [
-		{
-			"query":"span[title]",
-			"@lang":"sux",
-			"rb":"el.innerHTML",
-			"rt":[
-				{
-					"eval":"el.getAttribute('title').indexOf('(') > -1 ? el.getAttribute('title').split(/\\s*\\([^\\)]*\\)\\s*/g)[0] : ''",
-					"@lang":"sux-Latn"
-				}
-			],
-			"rtc":[
-				{
-					"eval":"el.getAttribute('title').indexOf('(') > -1 ? el.getAttribute('title').split(/\\s*\\([^\\)]*\\)\\s*/g)[1] : ''",
-					"@lang":"en"
-				},
-				{
-					"eval":"el.getAttribute('title').indexOf('(') === -1 ? el.getAttribute('title') : ''",
-					"@lang":"en"
-				}
-			]
-		},
-		{
-			"query":"strong[title]",
-			"@lang":"sux",
-			"rb":"el.innerHTML",
-			"rt":{
-				"eval":"el.getAttribute('title')",
-				"@lang":"sux-Latn"
-			}
-		}
 	]
 }
