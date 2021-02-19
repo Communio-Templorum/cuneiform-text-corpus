@@ -78,8 +78,13 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 				'src/cdli/**/*.html',
 			])
 				.pipe(plugins.replaceString(
-					new RegExp('<(!DOCTYPE html)[^>]*>(.|\n)*?<table>', 'gi'),
+					new RegExp('<table\\b[^>]*>', 'gi'),
 					'<ol>',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('<\/table>', 'gi'),
+					'</ol>',
 					{ logs },
 				))
 				.pipe(plugins.replaceString(
@@ -89,7 +94,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 				))
 				.pipe(plugins.replaceString(
 					new RegExp('\\s*<td>(Q\\d{6}).*?<\/td>(\\s|\n)*', 'gi'),
-					'\n\t<li>',
+					'<li>',
 					{ logs },
 				))
 			// Remove useless empty rows
@@ -104,33 +109,47 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 					'<br>',
 					{ logs },
 				))
+				.pipe(plugins.replaceString(
+					new RegExp('[[\\]#\\|]', 'g'),
+					'',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('<(\/)?td[^>]*>', 'gi'),
+					'<$1span>',
+					{ logs },
+				))
 			// Wrap each cuneiform word in <ruby>
-				.pipe(plugins.replaceString(
-					new RegExp('\\s*<td[^>]*>(.+?)<\/td>(?:\\s|\n)*', 'g'),
-					(str, words) => {
-						words = words.trim();
-						return words.split(' ').map((word) => {
-							return `<ruby lang="und"><rb lang="und">${word}</rb><rt lang="und-Latn">${word}</rt></ruby>`;
-							// TODO: Handle numbers: 1(diš)
-						}).join(' ');
-					},
-					{ logs },
-				))
-				.pipe(plugins.replaceString(
-					new RegExp('<\/table>(.|\n)*?</html>', 'gi'),
-					'\n</ol>',
-					{ logs },
-				))
+			.pipe(plugins.dom(function () {
+				this.querySelectorAll('li > span').forEach((line) => {
+					line.outerHTML = line.innerHTML.trim().split(' ').map((word) => {
+						return `<ruby lang="${elementLang(line) || 'und'}" translate="no"><rb translate="no">${word}</rb><rt lang="${elementLang(line) || 'und'}-Latn" translate="no">${word}</rt></ruby>`;
+						// TODO: Handle numbers: 1(diš)
+					}).join(' ');
+				});
+			}))
 				.pipe(plugins.replaceString(
 					new RegExp('&amp;', 'g'),
 					' / ',
 					{ logs },
 				))
+			// Simplify HTML
 				.pipe(plugins.replaceString(
-					new RegExp('[[\\]#\\|]', 'gi'),
-					'',
+					new RegExp('<(!DOCTYPE html)[^>]*>(.|\n)*?<ol>', 'gi'),
+					'<ol>',
 					{ logs },
 				))
+				.pipe(plugins.replaceString(
+					new RegExp('<\/ol>(.|\n)*?</html>', 'gi'),
+					'</ol>',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('\\.\\.\\.', 'g'),
+					'&hellip;',
+					{ logs },
+				))
+			// Our transliterator expects superscripts
 				.pipe(plugins.replaceString(
 					new RegExp('{', 'g'),
 					'<sup>',
@@ -139,11 +158,6 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 				.pipe(plugins.replaceString(
 					new RegExp('}', 'g'),
 					'</sup>',
-					{ logs },
-				))
-				.pipe(plugins.replaceString(
-					new RegExp('\\.\\.\\.', 'g'),
-					'&hellip;',
 					{ logs },
 				))
 				.pipe(gulp.dest('build/cdli'));

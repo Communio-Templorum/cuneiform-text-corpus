@@ -61,7 +61,7 @@ const argv = require('yargs')
 	.command('watch', 'Watch files for changes to recompile')
 	.array('file')
 	.help('?')
-	.epilog(' ©2017–2019 Samuel B Grundman')
+	.epilog(' ©2017–2021 Samuel B Grundman')
 	.argv;
 
 const gulp = require('gulp');
@@ -71,7 +71,6 @@ const fileExists = require('file-exists');
 const plugins = {
 	...require('gulp-load-plugins')({
 		rename:{
-			'yodasws.gulp-pattern-replace': 'replaceString',
 			'gulp-autoprefixer': 'prefixCSS',
 			'gulp-run-command': 'cli',
 			'gulp-sass-lint': 'lintSass',
@@ -90,6 +89,7 @@ const plugins = {
 	}),
 	replaceString: require('@yodasws/gulp-pattern-replace'),
 	webpack: require('webpack-stream'),
+	dom: require('@yodasws/gulp-dom'),
 	named: require('vinyl-named'),
 };
 plugins['connect.reload'] = plugins.connect.reload;
