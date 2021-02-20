@@ -11,6 +11,17 @@ function elementLang(el) {
 	}
 }
 
+const json = JSON.parse(fs.readFileSync(`./src/cuneiform.json`));
+if (Array.isArray(json.unicode)) {
+	json.unicode = json.unicode.reverse().filter((d) => {
+		d = d.pattern || d[0];
+		// Don't replace numbers yet
+		if (d.match(/^[0-9,]+$/)) return false;
+		if (d.match(/\b(or|one|two|three|four|five|six|seven|eight|nine)\b/)) return false;
+		return true;
+	});
+}
+
 module.exports = (gulp, plugins, options, argv) => gulp.series(
 	// First, simplify markup and wrap with <ruby>
 	gulp.parallel(
@@ -74,6 +85,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 		},
 		// Correct Markup in CDLI Texts
 		() => {
+			const numberRegex = /(\d+)\s*\(([^)]+)\)-?/g;
 			return gulp.src([
 				'src/cdli/**/*.html',
 			])
@@ -110,11 +122,6 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 					{ logs },
 				))
 				.pipe(plugins.replaceString(
-					new RegExp('[[\\]#\\|]', 'g'),
-					'',
-					{ logs },
-				))
-				.pipe(plugins.replaceString(
 					new RegExp('<(\/)?td[^>]*>', 'gi'),
 					'<$1span>',
 					{ logs },
@@ -123,8 +130,15 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 			.pipe(plugins.dom(function () {
 				this.querySelectorAll('li > span').forEach((line) => {
 					line.outerHTML = line.innerHTML.trim().split(' ').map((word) => {
-						return `<ruby lang="${elementLang(line) || 'und'}" translate="no"><rb translate="no">${word}</rb><rt lang="${elementLang(line) || 'und'}-Latn" translate="no">${word}</rt></ruby>`;
-						// TODO: Handle numbers: 1(diš)
+						if (/\[?[x…]\]?/i.test(word)) return word;
+						const rt = word;
+						// Handle numbers, e.g. 1(diš)
+						if (Array.isArray(json.cdli)) {
+							json.cdli.forEach((d) => {
+								word = word.replace(new RegExp(d[0], 'g'), d[1]);
+							});
+						}
+						return `<ruby lang="${elementLang(line) || 'und'}" translate="no"><rb translate="no">${word}</rb><rt lang="${elementLang(line) || 'und'}-Latn" translate="no">${rt}</rt></ruby>`;
 					}).join(' ');
 				});
 			}))
@@ -151,13 +165,8 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 				))
 			// Our transliterator expects superscripts
 				.pipe(plugins.replaceString(
-					new RegExp('{', 'g'),
-					'<sup>',
-					{ logs },
-				))
-				.pipe(plugins.replaceString(
-					new RegExp('}', 'g'),
-					'</sup>',
+					new RegExp('\\{([^\\}]+)\\}', 'g'),
+					'<sup>$1</sup>',
 					{ logs },
 				))
 				.pipe(gulp.dest('build/cdli'));
@@ -186,17 +195,6 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 			}
 			return pattern;
 		};
-
-		const json = JSON.parse(fs.readFileSync(`./src/cuneiform.json`));
-		if (Array.isArray(json.unicode)) {
-			json.unicode = json.unicode.reverse().filter((d) => {
-				d = d.pattern || d[0];
-				// Don't replace numbers yet
-				if (d.match(/^[0-9,]+$/)) return false;
-				if (d.match(/\b(or|one|two|three|four|five|six|seven|eight|nine)\b/)) return false;
-				return true;
-			});
-		}
 
 		// Now Transliterate!
 		(argv.file || [
@@ -237,7 +235,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 
 					// Transliterate number codes
 					if (Array.isArray(json.numbers)) {
-						rb.innerHTML = rb.innerHTML.replace(/^NU:([^<]*)+$/i, (str, signs) => signs.split(/-|(&#x12[0-9a-f]{3};)/i).map((s) => {
+						rb.innerHTML = rb.innerHTML.replace(/^NU:(.*)+$/i, (str, signs) => signs.split(/-|(&#x12[0-9a-f]{3};)/i).map((s) => {
 							const sym = json.numbers.find(d => new RegExp(`^${d.pattern || d[0]}$`).test(s));
 							return (typeof sym === 'object' && (sym.replacement || sym[1])) || s;
 						}).join(''));
@@ -248,8 +246,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 						// Break up compounds and search for constituent characters
 						// e.g., ed3-de3-a-ba => [ ed3, de3, a, ba ] => [ &#x12313;&#x200D;&#x1207a;, &#x12248;, &#x12000;, &#x12040; ]
 						rb.innerHTML = rb.innerHTML.replace(/\s*(&#x12[0-9a-f]{3};)?(?:[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû×]+)(?:&#x12[0-9a-f]{3};|[-\.](&#x12[0-9a-f]{3};)?(?:[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû×]+))*\s*/gi, (word) => {
-							word = word.replace(/^\s*|\s*$/g, '');
-							return word.split(/[-\.]|(&#x12[0-9a-f]{3};)/i).map((p) => {
+							return word.trim().split(/[-\.]|(&#x12[0-9a-f]{3};)/i).map((p) => {
 								const sym = json.unicode.find(d => new RegExp(`^${d.pattern || d[0]}$`).test(p));
 								return (typeof sym === 'object' && (sym.replacement || sym[1])) || p;
 							}).join('');
