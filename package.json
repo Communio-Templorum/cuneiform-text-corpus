@@ -21,7 +21,7 @@
 		"@yodasws/gulp-pattern-replace": "^1.1.1",
 		"file-exists": "^4.0.0",
 		"font-awesome": "^4.7.0",
-		"gulp": "github:gulpjs/gulp#4.0",
+		"gulp": "^4.0.2",
 		"gulp-autoprefixer": "^7.0.0",
 		"gulp-babel": "^8.0.0",
 		"gulp-concat": "^2.6.1",
@@ -39,6 +39,6 @@
 		"gulp-strip-css-comments": "^2.0.0",
 		"vinyl-named": "^1.1.0",
 		"webpack-stream": "^5.2.1",
-		"yargs": "^8.0.2"
+		"yargs": "^16.2.0"
 	}
 }
