@@ -475,6 +475,7 @@ function runTasks(task) {
 		src: [
 			'src/**/*.html',
 			'!src/etcsl/**/*.html',
+			'!src/cdli/**/*.html',
 			'!src/enuma-elish.html',
 			'!**/includes/**/*.html'
 		],
@@ -572,6 +573,7 @@ gulp.task('watch', (done) => {
 	gulp.watch([
 		'src/**/*.html',
 		'!src/etcsl/**/*.html',
+		'!src/cdli/**/*.html',
 		'!src/enuma-elish.html',
 	], {
 		usePolling: true,

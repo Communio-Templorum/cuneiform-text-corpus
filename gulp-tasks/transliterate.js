@@ -30,13 +30,29 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 			return gulp.src([
 				`src/etcsl/**/*.html`,
 			])
+			// Simplify HTML
 				.pipe(plugins.replaceString(
-					new RegExp('<table[^>]*>\\s*(<tbody[^>]*>\\s*)?', 'g'),
+					new RegExp('(<(!DOCTYPE html|hr)[^>]*>|<(?<tag>(center|head|h[23456]|p))\\b[^>]*>(.|\n)*?</\\k<tag>>)(\s|\n)*', 'g'),
+					'',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('<\/?(html|body)>(\\s|\n)*', 'g'),
+					'',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('<(ol|table|header)\\b[^>]*>(\\s|\n)*', 'gi'),
+					'<$1>',
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('<table[^>]*>(\\s|\n)*(<tbody[^>]*>(\\s|\n)*)?', 'g'),
 					'<ol>\n',
 					{ logs },
 				))
 				.pipe(plugins.replaceString(
-					new RegExp('<tr><td[^>]*>(<a[^>]*>[^<]*</a>)+</td><td[^>]*>\\s*', 'g'),
+					new RegExp('<tr><td[^>]*>(<a[^>]*>[^<]*</a>)+</td><td[^>]*>(\\s|\n)*', 'g'),
 					'\t<li>',
 					{ logs },
 				))
@@ -51,7 +67,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 					{ logs },
 				))
 				.pipe(plugins.replaceString(
-					new RegExp('(</tbody>\\s*)?</table>', 'g'),
+					new RegExp('(</tbody>(\\s|\n)*)?</table>(\\s|\n)*', 'g'),
 					'</ol>',
 					{ logs },
 				))
