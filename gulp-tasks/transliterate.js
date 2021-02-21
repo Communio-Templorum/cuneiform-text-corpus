@@ -126,6 +126,11 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 					'<$1span>',
 					{ logs },
 				))
+				.pipe(plugins.replaceString(
+					new RegExp('\\.\\.\\.', 'g'),
+					'…',
+					{ logs },
+				))
 			// Wrap each cuneiform word in <ruby>
 			.pipe(plugins.dom(function () {
 				this.querySelectorAll('li > span').forEach((line) => {
@@ -149,8 +154,8 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 				))
 			// Simplify HTML
 				.pipe(plugins.replaceString(
-					new RegExp('<(!DOCTYPE html)[^>]*>(.|\n)*?<ol>', 'gi'),
-					'<ol>',
+					new RegExp('<(!DOCTYPE html)[^>]*>(.|\n)*?<(ol|header)>', 'gi'),
+					'<$3>',
 					{ logs },
 				))
 				.pipe(plugins.replaceString(
@@ -158,14 +163,9 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 					'</ol>',
 					{ logs },
 				))
-				.pipe(plugins.replaceString(
-					new RegExp('\\.\\.\\.', 'g'),
-					'&hellip;',
-					{ logs },
-				))
 			// Our transliterator expects superscripts
 				.pipe(plugins.replaceString(
-					new RegExp('\\{([^\\}]+)\\}', 'g'),
+					new RegExp('\\{([^\\\}]+)\\}', 'g'),
 					'<sup>$1</sup>',
 					{ logs },
 				))
