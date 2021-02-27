@@ -193,8 +193,13 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 				'src/enuma-elish.html',
 			])
 				.pipe(plugins.replaceString(
-					new RegExp('<strong>([a-z0-9.-]+)</strong>', 'g'),
-					'<ruby lang="akk" translate="no"><rb translate="no">$1</rb><rt lang="akk-Latn" translate="no">$1</rt></ruby>',
+					new RegExp('<strong>([a-z0-9.\\-’]+)</strong>', 'gi'),
+					(str, signs) => `<ruby lang="akk" translate="no"><rb translate="no">${signs.replace(/\b(sh)|sh\b/gi, 'š')}</rb><rt lang="akk-Latn" translate="no">${signs}</rt></ruby>`,
+					{ logs },
+				))
+				.pipe(plugins.replaceString(
+					new RegExp('\\.\\.\\.', 'g'),
+					'…',
 					{ logs },
 				))
 				.pipe(gulp.dest('build'));
