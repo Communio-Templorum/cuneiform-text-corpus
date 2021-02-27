@@ -3,18 +3,6 @@ body[y-section="home"] {
 		display: none;
 	}
 
-	h2 {
-		text-align: center;
-	}
-
-	h3 {
-		margin-bottom: 1em;
-	}
-
-	ul abbr {
-		text-decoration: none;
-	}
-
 	> footer,
 	> nav {
 		order: 1;
@@ -51,5 +39,25 @@ body[y-section="home"] {
 	> main {
 		flex-grow: 0;
 		order: 0;
+	}
+}
+
+main[y-page="home"] {
+	h2 {
+		text-align: center;
+	}
+
+	h3 {
+		margin-bottom: 1em;
+	}
+
+	ul {
+		abbr {
+			text-decoration: none;
+		}
+
+		li {
+			margin-bottom: 1em;
+		}
 	}
 }

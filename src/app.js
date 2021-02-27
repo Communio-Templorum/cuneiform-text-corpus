@@ -66,13 +66,21 @@ yodasws.on('page-loaded', (evt) => {
 });
 
 const strokemap = {
-	'a': '𒀸 U+12038 AŠ',
-	'd': '𒁹 U+12079 DIŠ',
-	'ddd': '𒀀 U+12000 A',
-	'u': '𒌋 U+1230B U',
-	'uu': '𒎙 U+12399 U U, MIN<sub>3</sub>',
-	'uuu': '𒌍 U+1230D U U U, ES<sub>2</sub>, EŠ',
-	'uaad': '𒌌 U+1230C U GUD, DU<sub>7</sub>, UL',
+	a: '𒀸 U+12038 AŠ',
+	aa: '𒋰 U+122F0 TAB',
+	d: '𒁹 U+12079 DIŠ',
+	dd: '𒈫 U+1222B MIN',
+	ddd: '𒀀 U+12000 A, AYA<sub>2</sub>, DURU<sub>5</sub>, E<sub>4</sub>, EA',
+	dddddd: '𒀁 U+12001 A x A, EDURU',
+	g: '𒍻 U+1237B GE<sub>22</sub>',
+	t: '𒋰 U+122F0 TAB',
+	tgzd: '𒀊 U+1200A AB, ABA, ABBA, AP, EŠ3, IRI<sub>12</sub>, IS<sub>3</sub>',
+	u: '𒌋 U+1230B U',
+	uu: '𒎙 U+12399 U U, MIN<sub>3</sub>',
+	uuu: '𒌍 U+1230D U U U, ES<sub>2</sub>, EŠ',
+	uaad: '𒌌 U+1230C U GUD, DU<sub>7</sub>, UL',
+	uzg: '𒀖 U+12016 AB<sub>2</sub>, LID',
+	z: '𒀹 U+12039 AŠ ZIDA tenû, DIŠ tenû, GE<sub>23</sub>',
 };
 
 const numbers = {
@@ -139,12 +147,15 @@ yodasws.page('home').setRoute({
 			output.strokes.innerHTML = [
 				`a ${strokemap.a}`,
 				`d ${strokemap.d}`,
+				`g ${strokemap.g}`,
+				`t ${strokemap.t}`,
 				`u ${strokemap.u}`,
-			].map(t => `<li>${t}</li>`).join('');
+				`z ${strokemap.z}`,
+			].map(t => `${t}<br>`).join('');
 			return;
 		}
 		Object.entries(strokemap).forEach(([keys, txt]) => {
-			if (keys.indexOf(evt.target.value) === 0) options.push(txt);
+			if (keys.indexOf(evt.target.value) === 0) options.push(`${txt}<br>${keys}`);
 		});
 		output.strokes.innerHTML = options.map(t => `<li>${t}</li>`).join('');
 	});
