@@ -114,10 +114,17 @@ yodasws.page('home').setRoute({
 		number: document.getElementById('cuneiform-number-out'),
 		strokes: document.getElementById('cuneiform-strokes-out'),
 	};
-	document.getElementById('cuneiform-strokes').addEventListener('input', (evt) => {
+	const input = {
+		strokes: document.getElementById('cuneiform-strokes'),
+	};
+	input.strokes.addEventListener('input', (evt) => {
 		const options = [];
 		if (evt.target.value === '') {
-			output.strokes.innerHTML = '';
+			output.strokes.innerHTML = [
+				`a ${strokemap.a}`,
+				`d ${strokemap.d}`,
+				`u ${strokemap.u}`,
+			].map(t => `<li>${t}</li>`).join('');
 			return;
 		}
 		Object.entries(strokemap).forEach(([keys, txt]) => {
@@ -125,6 +132,7 @@ yodasws.page('home').setRoute({
 		});
 		output.strokes.innerHTML = options.map(t => `<li>${t}</li>`).join('');
 	});
+	input.strokes.dispatchEvent(new Event('input'));
 	document.getElementById('cuneiform-number').addEventListener('input', (evt) => {
 		let out = '';
 		if (evt.target.value === '') {
