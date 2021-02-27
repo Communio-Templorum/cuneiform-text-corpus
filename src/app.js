@@ -104,6 +104,22 @@ const numbers = {
 	1800: '𒐠',
 	2400: '𒐡',
 	3000: '𒐢',
+	3600: '𒊹',
+	7200: '𒐣',
+	10800: '𒐥',
+	14400: '𒐦',
+	18000: '𒐧',
+	21600: '𒐨',
+	25200: '𒐩',
+	28800: '𒐪',
+	32400: '𒐫',
+	36000: '𒐬',
+	72000: '𒐭',
+	108000: '𒐯',
+	144000: '𒐰',
+	180000: '𒐱',
+	216000: '𒐲',
+	432000: '𒐳',
 };
 
 yodasws.page('home').setRoute({
@@ -140,11 +156,17 @@ yodasws.page('home').setRoute({
 			return;
 		}
 		let num = Number.parseFloat(evt.target.value);
-		console.log('Sam, num:', num);
+		if (evt.target.hasAttribute('max') && num > Number.parseInt(evt.target.getAttribute('max'))) {
+			num = Number.parseInt(evt.target.getAttribute('max'))
+			evt.target.value = num;
+		}
+		if (evt.target.hasAttribute('min') && num < Number.parseInt(evt.target.getAttribute('min'))) {
+			num = Number.parseInt(evt.target.getAttribute('min'))
+			evt.target.value = num;
+		}
 		Object.entries(numbers).sort((a, b) => b[0] - a[0]).forEach(([val, str]) => {
-			console.log('Sam, val:', val);
 			if (num >= val) {
-				out += str;
+				out += `<abbr title="${val.replace(/(\d)(\d\d\d)+$/g, '$1,$2')}">${str}</abbr>`;
 				num -= val;
 			}
 		});

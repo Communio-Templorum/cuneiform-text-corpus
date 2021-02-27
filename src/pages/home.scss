@@ -11,6 +11,10 @@ body[y-section="home"] {
 		margin-bottom: 1em;
 	}
 
+	ul abbr {
+		text-decoration: none;
+	}
+
 	> footer,
 	> nav {
 		order: 1;
