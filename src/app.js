@@ -244,6 +244,9 @@ yodasws.page('home').setRoute({
 		Object.entries(strokemap).forEach(([keys, txt]) => {
 			if (keys.indexOf(userInput) === 0) options.push(`${txt}<br>${keys}`);
 		});
+		Object.entries(strokemap).forEach(([keys, txt]) => {
+			if (keys.indexOf(userInput) > 0) options.push(`${txt}<br>${keys}`);
+		});
 		output.strokes.innerHTML = options.map(t => `<li>${t}</li>`).join('');
 	});
 	input.strokes.dispatchEvent(new Event('input'));
