@@ -118,7 +118,6 @@ const strokemap = {
 	td: '𒄑 U+12111, GIŠ, GEŠ, ĜIŠ, IZ',
 	'td.': '𒉺 U+1227A, PA, ĜIDRU, SAG<sub>3</sub>, SIG<sub>3</sub>, UGULA',
 	'td.d': '𒄥 U+12125, GUR',
-	'td.d.d.': '𒌑 U+12311, U2, KUŠ<sub>3</sub>',
 	tdzg: '𒄞 U+1211E, GUD, GU<sub>4</sub>, EŠTUB',
 	tdzgu: '𒃴 U+120F4, GALAM, SUKUD',
 	tdzgtd: '𒄐 U+12110, GISAL',
@@ -126,6 +125,7 @@ const strokemap = {
 	tgzdd: '𒆯 U+121AF, KU<sub>7</sub>',
 	tm: '𒄥 U+12125, GUR',
 	tma: '𒈥 U+12225, MAR, GIŠ ME',
+	'tm.m.': '𒌑 U+12311, U2, KUŠ<sub>3</sub>',
 	ttd: '𒆦 U+121A6, KISAL',
 	'ttd.': '𒀾 U+1203E, AŠ2',
 	ttda: '𒃲 U+120F2, GAL',
@@ -229,23 +229,23 @@ yodasws.page('home').setRoute({
 		const options = [];
 		if (evt.target.value === '') {
 			output.strokes.innerHTML = [
-				`a ${strokemap.a}`,
-				`d ${strokemap.d}`,
-				`g ${strokemap.g}`,
-				`m ${strokemap.m}`,
-				`t ${strokemap.t}`,
-				`u ${strokemap.u}`,
-				`v ${strokemap.v}`,
-				`z ${strokemap.z}`,
+				`<kbd>a</kbd> ${strokemap.a}`,
+				`<kbd>t</kbd> ${strokemap.t}`,
+				`<kbd>d</kbd> ${strokemap.d}`,
+				`<kbd>m</kbd> ${strokemap.m}`,
+				`<kbd>g</kbd> ${strokemap.g}`,
+				`<kbd>z</kbd> ${strokemap.z}`,
+				`<kbd>u</kbd> ${strokemap.u}`,
+				`<kbd>v</kbd> ${strokemap.v}`,
 			].map(t => `${t}<br>`).join('');
 			return;
 		}
 		const userInput = evt.target.value.toLowerCase();
 		Object.entries(strokemap).forEach(([keys, txt]) => {
-			if (keys.indexOf(userInput) === 0) options.push(`${txt}<br>${keys}`);
+			if (keys.indexOf(userInput) === 0) options.push(`${txt}<br><kbd>${keys}</kbd>`);
 		});
 		Object.entries(strokemap).forEach(([keys, txt]) => {
-			if (keys.indexOf(userInput) > 0) options.push(`${txt}<br>${keys}`);
+			if (keys.indexOf(userInput) > 0) options.push(`${txt}<br><kbd>${keys}</kbd>`);
 		});
 		output.strokes.innerHTML = options.map(t => `<li>${t}</li>`).join('');
 	});

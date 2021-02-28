@@ -59,5 +59,16 @@ main[y-page="home"] {
 		li {
 			margin-bottom: 1em;
 		}
+
+		kbd {
+			$padding-top: 3px;
+			$margin-top: 2px;
+			margin-top: $margin-top;
+			border: 1px solid lightgrey;
+			padding: $padding-top 7px;
+			line-height: calc(1em + #{$padding-top} * 2 + #{$margin-top} * 3);
+			border-radius: 0.5em;
+			background: whitesmoke;
+		}
 	}
 }
