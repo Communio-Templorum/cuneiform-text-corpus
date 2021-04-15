@@ -63,6 +63,11 @@ yodasws.on('page-loaded', (evt) => {
 		list.setAttribute('hidden', '');
 	});
 	document.body.setAttribute('y-section', evt.detail.page);
+
+	const autofocus = document.querySelector('[autofocus]');
+	if (autofocus instanceof Element) {
+		autofocus.focus();
+	}
 });
 
 const strokemap = {
