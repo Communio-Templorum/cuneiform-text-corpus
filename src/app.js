@@ -92,6 +92,8 @@ const strokemap = {
 	'au\'': '𒍗 U+12357, UŠ2',
 	auaad: '𒁺 U+1207A, DU, RE6, GUB, ŠA4',
 	auav: '𒆰 U+121B0, KUL',
+	audau: '𒋾 U+122FE, TI',
+	az: '𒌀 U+12300, TIL',
 	'azdu.': '𒆐 U+12190, KAD<sub>2</sub>',
 	azg: '𒄬 U+1212C, ḪAL',
 	'azmm.': '𒋂 U+122C2, ŠEŠLAM',
@@ -159,6 +161,7 @@ const strokemap = {
 	'ttda.': '𒋗 U+122D7, ŠU',
 	ttuzg: '𒃼 U+120FC, GAR<sub>3</sub>, QAR',
 	'ttu.da': '𒅊 U+1214A, IGI gunû, AGAR<sub>4</sub>, IMMA<sub>3</sub>, SE<sub>12</sub>, SIG<sub>7</sub>, ŠEX, UGARX, UGUR<sub>2</sub>',
+	tumd: '𒋬 U+122EC, TA*, TA<sub>X</sub>',
 	tvaa: '𒉒 U+12252, NINDA<sub>2</sub>',
 	u: '𒌋 U+1230B, U',
 	uu: '𒎙 U+12399, U U, MIN<sub>3</sub>',
@@ -197,6 +200,7 @@ const strokemap = {
 	zmg: '𒉌 U+1224C, NI, BE<sub>3</sub>, DIG, I<sub>3</sub>, IA<sub>3</sub>, LE<sub>2</sub>, LI<sub>2</sub>, LID<sub>2</sub>, NE<sub>2</sub>, SUŠ<sub>2</sub>, ZAL, ZAR<sub>2</sub>',
 	zuaad: '𒁺 U+1207A, DU, RE<sub>6</sub>, GUB, ŠA<sub>4</sub>',
 	zzz: '𒆳 U+121B3, KUR, GIN<sub>3</sub>',
+	zzzz: '𒎗 U+12397, TI<sub>2</sub>',
 };
 
 const numbers = {

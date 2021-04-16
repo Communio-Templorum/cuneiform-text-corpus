@@ -152,7 +152,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 				this.querySelectorAll('li > span').forEach((line) => {
 					line.outerHTML = line.innerHTML.trim().split(' ').map((word) => {
 						if (/\[?[x…]\]?/i.test(word)) return word;
-						const rt = word;
+						const rt = word.replace(/^NU:/, '').replace(/_/g, ' ');
 						// Handle numbers, e.g. 1(diš)
 						if (Array.isArray(json.cdli)) {
 							json.cdli.forEach((d) => {
