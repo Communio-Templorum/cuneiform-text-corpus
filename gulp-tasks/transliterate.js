@@ -103,7 +103,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 		() => {
 			const numberRegex = /(\d+)\s*\(([^)]+)\)-?/g;
 			return gulp.src([
-				'src/cdli/**/*.html',
+				'src/cdli/{P,Q}*.html',
 			])
 				.pipe(plugins.replaceString(
 					new RegExp('<table\\b[^>]*>', 'gi'),
@@ -220,7 +220,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 		// Now Transliterate!
 		(argv.file || [
 			'etcsl/{1,2,3,4,5,6}.*',
-			'cdli/Q*.html',
+			'cdli/{P,Q}*.html',
 			'enuma-elish.html',
 		]).map(file => {
 			let folder = '';
