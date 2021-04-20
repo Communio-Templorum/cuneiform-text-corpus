@@ -1,0 +1,18 @@
+ruby {
+	> rtc:lang(en) {
+		display: inline-block;
+		font-size: 0.8em;
+		vertical-align: middle;
+		color: grey;
+
+		&::before {
+			display: inline;
+			content: "\a0(";
+		}
+
+		&::after {
+			display: inline;
+			content: ")";
+		}
+	}
+}
