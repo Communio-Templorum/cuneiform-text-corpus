@@ -555,7 +555,7 @@ gulp.task('compile:js', gulp.series(
 
 gulp.task('transliterate', getTask('transliterate'));
 
-gulp.task('compile', gulp.parallel('compile:html', 'compile:js', 'compile:sass', 'transfer-files'));
+gulp.task('compile', gulp.parallel('compile:html', 'compile:js', 'compile:sass', 'transfer-files', 'transliterate'));
 
 gulp.task('watch', (done) => {
 	gulp.watch('./src/**/*.{sa,sc,c}ss', {
@@ -578,13 +578,16 @@ gulp.task('watch', (done) => {
 	], {
 		usePolling: true,
 	}, gulp.series('compile:html'));
+
 	gulp.watch([
 		'src/cuneiform.json',
 		'src/etcsl/**/*.html',
+		'src/cdli/**/*.html',
 		'src/enuma-elish.html',
 	], {
 		usePolling: true,
 	}, gulp.series('transliterate'));
+
 	done();
 });
 

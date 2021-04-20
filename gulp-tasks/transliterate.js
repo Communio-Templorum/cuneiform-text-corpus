@@ -159,7 +159,15 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 								word = word.replace(new RegExp(d[0], 'g'), d[1]);
 							});
 						}
-						return `<ruby lang="${elementLang(line) || 'und'}" translate="no"><rb translate="no">${word}</rb><rt lang="${elementLang(line) || 'und'}-Latn" translate="no">${rt}</rt></ruby>`;
+						const lang = elementLang(line) || 'und';
+						// Build <rb><rt>
+						let ruby = `<rb translate="no">${word}</rb><rt lang="${lang}-Latn" translate="no">${rt}</rt>`;
+						// Add English translation if provided
+						if (line.hasAttribute('title')) {
+							ruby += `<rtc lang="en" translate="yes">${line.getAttribute('title')}</rtc>`;
+						}
+						// Return <ruby>
+						return `<ruby lang="${lang}" translate="no">${ruby}</ruby>`;
 					}).join(' ');
 				});
 			}))
@@ -266,7 +274,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 					if (Array.isArray(json.unicode)) {
 						// Break up compounds and search for constituent characters
 						// e.g., ed3-de3-a-ba => [ ed3, de3, a, ba ] => [ &#x12313;&#x200D;&#x1207a;, &#x12248;, &#x12000;, &#x12040; ]
-						rb.innerHTML = rb.innerHTML.replace(/\s*(&#x12[0-9a-f]{3};)?(?:[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû×]+)(?:&#x12[0-9a-f]{3};|[-\.](&#x12[0-9a-f]{3};)?(?:[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû×]+))*\s*/gi, (word) => {
+						rb.innerHTML = rb.innerHTML.replace(/\s*(&#x12[0-9a-f]{3};)?(?:[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû×*+\/]+)(?:&#x12[0-9a-f]{3};|[-\.](&#x12[0-9a-f]{3};)?(?:[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû×*]+))*\s*/gi, (word) => {
 							return word.trim().split(/[-\.]|(&#x12[0-9a-f]{3};)/i).map((p) => {
 								const sym = json.unicode.find(d => new RegExp(`^${d.pattern || d[0]}$`).test(p));
 								return (typeof sym === 'object' && (sym.replacement || sym[1])) || p;
@@ -277,7 +285,7 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 			}));
 
 			// Remove superscript around cuneiform
-			stream.pipe(plugins.replaceString(/<sup>((?:\uD808[\uDC00-\uDFFF]|\uD809[\uDC00-\uDD4F])+)<\/sup>/gi, (str, signs) => signs, { logs }))
+			stream.pipe(plugins.replaceString(/<sup>((?:\uD808[\uDC00-\uDFFF]|\uD809[\uDC00-\uDD4F])+)<\/sup>/gi, (str, signs) => signs, { logs }));
 
 			// Remove unwanted HTML for subpage content
 			stream = stream.pipe(plugins.replaceString(
@@ -287,8 +295,12 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 			));
 
 			// Output Results
-			stream.pipe(gulp.dest(path.join(options.dest, obj.folder !== '**' ? obj.folder : '')))
+			stream.pipe(gulp.dest(path.join(options.dest, obj.folder !== '**' ? obj.folder : '')));
 		});
+		done();
+	},
+	(done) => {
+		gulp.src('docs').pipe(plugins['connect.reload']());
 		done();
 	},
 );
