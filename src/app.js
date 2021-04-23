@@ -84,6 +84,8 @@ const strokemap = {
 	aamzddg: '𒁉 U+12049, BI, BE<sub>2</sub>',
 	aaudav: '𒁄 U+12044, BAL',
 	adad: '𒆸 U+121B8, LAGAB, GUR<sub>4</sub>, NIGIN<sub>2</sub>, NIĜIN<sub>2</sub>, RIN, TUKUR',
+	adadxau: '𒇀 U+121C0, LAGAB x BAD, GIGIR',
+	adadxu: '𒇥 U+121E5, LAGAB x U, BU4, GIGIR<sub>2</sub>, PU<sub>2</sub>, TUL<sub>2</sub>',
 	adud: '𒄷 U+12137, ḪU, MUŠEN, U<sub>11</sub>',
 	ama: '𒋥 U+122E5, SUD<sub>2</sub>, ŠITA<sub>3</sub>',
 	ammd: '𒉣 U+12263, NUN, SIL<sub>2</sub>, ZI',
