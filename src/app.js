@@ -110,6 +110,7 @@ const strokemap = {
 	da: '𒈨 U+12228, ME, BA<sub>13</sub>, IŠIB, MEN<sub>2</sub>',
 	'da\'': '𒇲 U+121F2, LAL, LA<sub>2</sub>',
 	daad: '𒆸 U+121B8, LAGAB, GUR<sub>4</sub>, NIGIN<sub>2</sub>, NIĜIN<sub>2</sub>, RIN, TUKUR, <kbd>adad</kbd>',
+	dammad: '𒅁 U+12141, IB, ARKAB<sub>X</sub>',
 	dauuu: '𒎌 U+1238C, MEŠ',
 	dd: '𒈫 U+1222B, MIN',
 	ddd: '𒀀 U+12000, A, AYA<sub>2</sub>, DURU<sub>5</sub>, E<sub>4</sub>, EA',
