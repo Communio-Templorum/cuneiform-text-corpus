@@ -118,6 +118,7 @@ const strokemap = {
 	ddd: '𒀀 U+12000, A, AYA<sub>2</sub>, DURU<sub>5</sub>, E<sub>4</sub>, EA',
 	datad: '𒉇 U+12247, NAM<sub>2</sub>, <kbd>adadxt</kbd>',
 	'ddd\'g': '𒃻 U+120FB, GAR, ĜAR, NINDA, NI<sub>3</sub>, NIG<sub>2</sub>, NIĜ<sub>2</sub>',
+	ddudu: '𒄩 U+12129, ḪA, KU6',
 	dgaz: '𒊩 U+122A9, SAL, GAL<sub>4</sub>, MI<sub>2</sub>, MUNUS, RAK',
 	dtd: '𒆸 U+121B8, LAGAB, GUR<sub>4</sub>, NIGIN<sub>2</sub>, NIĜIN<sub>2</sub>, RIN, TUKUR, <kbd>adad</kbd>',
 	du: '𒋙 U+122D9, ŠU<sub>2</sub>, ŠUŠ<sub>2</sub>',
