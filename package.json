@@ -32,13 +32,19 @@
 		"gulp-load-plugins": "^2.0.1",
 		"gulp-order": "^1.1.1",
 		"gulp-rm-lines": "<1.0.0",
-		"gulp-run-command": "^0.0.7",
+		"gulp-run-command": "<1.0.0",
 		"gulp-sass": "^4.0.2",
-		"gulp-sass-lint": "^1.3.2",
+		"gulp-sass-lint": "^1.4.0",
 		"gulp-ssi": "^0.1.3",
 		"gulp-strip-css-comments": "^2.0.0",
 		"vinyl-named": "^1.1.0",
-		"webpack-stream": "^5.2.1",
+		"webpack-stream": "^6.1.2",
 		"yargs": "^16.2.0"
+	},
+	"resolutions": {
+		"eslint": "^7.28.0"
+	},
+	"directories": {
+		"lib": "lib"
 	}
 }
