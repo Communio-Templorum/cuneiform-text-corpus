@@ -9,7 +9,7 @@ their original form online in the 21st century.
 JavaScript code ©2017–2021 Samuel B Grundman
 
 The original texts/stories, in their original language, are in the public domain and I believe the
-transliterated text would be, too. Reagrdless, I contend this project falls fully within the United
+transliterated text would be, too. Regardless, I contend this project falls fully within the United
 States' doctrine of transformative fair use.
 
 Any English translations used in this project are either simple definitions of individual words, were
