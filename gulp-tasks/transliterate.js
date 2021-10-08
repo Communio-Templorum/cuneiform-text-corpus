@@ -11,18 +11,23 @@ function elementLang(el) {
 	}
 }
 
-const json = JSON.parse(fs.readFileSync(`./src/cuneiform.json`));
-if (Array.isArray(json.unicode)) {
-	json.unicode = json.unicode.reverse().filter((d) => {
-		d = d.pattern || d[0];
-		// Don't replace numbers yet
-		if (d.match(/^[0-9,]+$/)) return false;
-		if (d.match(/\b(or|one|two|three|four|five|six|seven|eight|nine)\b/)) return false;
-		return true;
-	});
+let json = {};
+function updateJson(done) {
+	json = JSON.parse(fs.readFileSync(`./src/cuneiform.json`));
+	if (Array.isArray(json.unicode)) {
+		json.unicode = json.unicode.reverse().filter((d) => {
+			d = d.pattern || d[0];
+			// Don't replace numbers yet
+			if (d.match(/^[0-9,]+$/)) return false;
+			if (d.match(/\b(or|one|two|three|four|five|six|seven|eight|nine)\b/)) return false;
+			return true;
+		});
+	}
+	done();
 }
 
 module.exports = (gulp, plugins, options, argv) => gulp.series(
+	updateJson,
 	// First, simplify markup and wrap with <ruby>
 	gulp.parallel(
 		// Correct Markup in ETCSL Texts
