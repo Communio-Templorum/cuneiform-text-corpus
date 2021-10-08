@@ -89,7 +89,6 @@ const plugins = {
 	}),
 	replaceString: require('@yodasws/gulp-pattern-replace'),
 	webpack: require('webpack-stream'),
-	dom: require('@yodasws/gulp-dom'),
 	named: require('vinyl-named'),
 };
 plugins['connect.reload'] = plugins.connect.reload;

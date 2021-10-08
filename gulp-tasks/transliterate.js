@@ -26,7 +26,9 @@ function updateJson(done) {
 	done();
 }
 
-module.exports = (gulp, plugins, options, argv) => gulp.series(
+module.exports = (gulp, plugins, options, argv) => {
+plugins.dom = require('@yodasws/gulp-dom');
+return gulp.series(
 	updateJson,
 	// First, simplify markup and wrap with <ruby>
 	gulp.parallel(
@@ -304,8 +306,5 @@ module.exports = (gulp, plugins, options, argv) => gulp.series(
 		});
 		done();
 	},
-	(done) => {
-		gulp.src('docs').pipe(plugins['connect.reload']());
-		done();
-	},
 );
+};
