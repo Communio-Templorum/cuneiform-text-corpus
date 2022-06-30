@@ -35,6 +35,14 @@ const argv = require('yargs')
 			alias: 'n',
 		},
 	})
+	.command('*', 'Compile files, run the server, and watch for changes to files', {
+		port: {
+			describe: 'The server port to listen to',
+			type: 'number',
+			default: 3000,
+			alias: 'p',
+		},
+	})
 	.command(['serve'], 'Run server', {
 		port: {
 			describe: 'The server port to listen to',
