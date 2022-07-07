@@ -3,6 +3,17 @@
 yodasws.on('site-loaded', () => {
 	document.querySelectorAll('body > nav a:not([href])').forEach((link) => {
 		link.addEventListener('click', toggleMenu);
+		link.addEventListener('keypress', (evt) => {
+			console.log('Sam, keypress,', evt.key);
+			if ([
+				'Enter',
+				'Space',
+				' ',
+			].includes(evt.key)) {
+				evt.preventDefault();
+				toggleMenu(evt);
+			}
+		});
 	});
 
 	function toggleMenu(evt) {

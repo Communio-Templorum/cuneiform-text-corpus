@@ -57,13 +57,23 @@ body > nav:not([hidden]) {
 		}
 	}
 
+	ul {
+		margin: 0;
+	}
+
 	li:not(:last-child) > ul {
 		margin-bottom: 1rem;
 	}
 
+	ul li:not(:last-child) > ul {
+		margin-top: 0.5rem;
+	}
+
+	$transition-time: 750ms;
+
 	ul {
 		max-height: 50vh;
-		transition: background 500ms, transform 750ms, max-height 750ms linear;
+		transition: background 500ms, transform #{$transition-time}, max-height #{$transition-time} linear, visibility #{$transition-time} step-start;
 		transform-origin: top center;
 		transform: scaleY(1);
 		overflow: hidden;
@@ -71,6 +81,8 @@ body > nav:not([hidden]) {
 
 		&[hidden] {
 			display: block;
+			visibility: hidden;
+			transition: background 500ms, transform #{$transition-time}, max-height #{$transition-time} linear, visibility #{$transition-time} step-end;
 			transform: scaleY(0);
 		}
 
