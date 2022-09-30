@@ -18,7 +18,30 @@ body > header {
 	}
 }
 
-body > nav:not([hidden]) {
+body[y-section="home"] > nav:not([hidden]) {
+	*[hidden] {
+		display: block;
+	}
+
+	> a[href="#!/"] {
+		display: none;
+	}
+
+	> li {
+		list-style: none;
+	}
+
+	ul {
+		margin-top: 1em;
+		margin-bottom: 1em;
+	}
+
+	a:not([href])[tabindex="0"] {
+		font-size: 1.3em;
+	}
+}
+
+body:not([y-section="home"]) > nav:not([hidden]) {
 	display: flex;
 	flex-flow: row wrap;
 	justify-content: space-between;
