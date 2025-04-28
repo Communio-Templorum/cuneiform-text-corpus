@@ -56,7 +56,7 @@ body:not([y-section="home"]) > nav:not([hidden]) {
 	}
 
 	a {
-		@extend a:link;
+		@extend %a-link;
 		cursor: pointer;
 		color: blue;
 	}
@@ -78,10 +78,6 @@ body:not([y-section="home"]) > nav:not([hidden]) {
 		&[hidden] {
 			transform: translateX(-50%) scaleY(0);
 		}
-	}
-
-	ul {
-		margin: 0;
 	}
 
 	li:not(:last-child) > ul {
