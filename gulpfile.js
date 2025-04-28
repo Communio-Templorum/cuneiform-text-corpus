@@ -145,33 +145,6 @@ const options = {
 		removeStyleLinkTypeAttributes: true,
 		useShortDoctype: true,
 	},
-	lintES: {
-		overrideConfig: {
-			languageOptions: {
-				parserOptions: {
-					sourceType: 'module',
-					ecmaVersion: 2021,
-				},
-			},
-			rules: {
-
-'strict': [
-	2, 'global',
-],
-'indent': [
-	2, 'tab',
-],
-'space-before-function-paren': 0,
-'comma-dangle': 0,
-'no-console': 0,
-'no-undef': 0,
-'no-tabs': 0,
-'no-var': 2,
-'semi': 0,
-
-			},
-		},
-	},
 	lintSass: {
 		files: {
 			ignore: '**/*.min.css',
@@ -459,35 +432,15 @@ function runTasks(task) {
 		fileType: 'css',
 	},
 	{
-		name: 'build:js',
+		name: 'compile:js',
 		src: [
 			'src/app.js',
 		],
 		tasks: [
 			'lintES',
 			'replaceString',
-		],
-		dest: 'build/',
-		fileType: 'js',
-	},
-	{
-		name: 'webpack:js',
-		src: [
-			'build/app.js',
-		],
-		tasks: [
 			'named',
 			'webpack',
-		],
-		dest: 'bundle/',
-		fileType: 'js',
-	},
-	{
-		name: 'minify:js',
-		src: [
-			'bundle/app.js',
-		],
-		tasks: [
 			'compileJS',
 			'rmLines',
 		],
@@ -530,7 +483,7 @@ export function lintSass() {
 		'!**/*.min.css',
 		'!**/min.css'
 	])
-		.pipe(plugins.lintSass(options.lintSass))
+		.pipe(plugins.lintSass(options.lintSass || {}))
 		.pipe(plugins.lintSass.format());
 };
 
@@ -540,7 +493,7 @@ export function lintJs() {
 		'!**/*.min.js',
 		'!**/min.js',
 	])
-		.pipe(plugins.lintES(options.lintES))
+		.pipe(plugins.lintES(options.lintES || {}))
 		.pipe(plugins.lintES.format());
 };
 
@@ -562,16 +515,6 @@ gulp.task('transfer-files', gulp.parallel(
 	'transfer:assets',
 	'transfer:fonts',
 	'transfer:res',
-));
-
-gulp.task('bundle:js', gulp.series(
-	'build:js',
-	'webpack:js',
-));
-
-gulp.task('compile:js', gulp.series(
-	'bundle:js',
-	'minify:js',
 ));
 
 globalThis.gulp = gulp;
