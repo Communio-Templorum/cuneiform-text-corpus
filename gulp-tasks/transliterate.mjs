@@ -77,6 +77,11 @@ export const transliterate = gulp.series(
 					'</ol>',
 					{ logs },
 				))
+				.pipe(plugins.replaceString(
+					new RegExp('-?(\\/|\\\\)-?', 'g'),
+					'$1',
+					{ logs },
+				))
 				.pipe(gulpDom(function () {
 					this.querySelectorAll('span[title]').forEach((el) => {
 						let html = ' <ruby ';
@@ -274,7 +279,7 @@ export const transliterate = gulp.series(
 
 					// Transliterate number codes
 					if (Array.isArray(json.numbers)) {
-						rb.innerHTML = rb.innerHTML.replace(/^NU:(.*)+$/i, (str, signs) => signs.split(/-|(&#x12[0-9a-f]{3};)/i).map((s) => {
+						rb.innerHTML = rb.innerHTML.replace(/^NU:(.*)+$/i, (str, signs) => signs.split(/-|(&#x12[0-9a-f]{3};|&#x200D;)/i).map((s) => {
 							const sym = json.numbers.find(d => new RegExp(`^${d.pattern || d[0]}$`).test(s));
 							return (typeof sym === 'object' && (sym.replacement || sym[1])) || s;
 						}).join(''));
@@ -284,8 +289,9 @@ export const transliterate = gulp.series(
 					if (Array.isArray(json.unicode)) {
 						// Break up compounds and search for constituent characters
 						// e.g., ed3-de3-a-ba => [ ed3, de3, a, ba ] => [ &#x12313;&#x200D;&#x1207a;, &#x12248;, &#x12000;, &#x12040; ]
-						rb.innerHTML = rb.innerHTML.replace(/\s*(&#x12[0-9a-f]{3};)?(?:[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû×*+\/]+)(?:&#x12[0-9a-f]{3};|[-\.](&#x12[0-9a-f]{3};)?(?:[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû×*]+))*\s*/gi, (word) => {
-							return word.trim().split(/[-\.]|(&#x12[0-9a-f]{3};)/i).map((p) => {
+						rb.innerHTML = rb.innerHTML.replace(/\s*(&#x12[0-9a-f]{3};[-\.]?|&#x200D;|\/|\\)*(?:[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû×*+\/]+)(?:&#x12[0-9a-f]{3};|[-\.](&#x12[0-9a-f]{3};|&#x200D;|\/|\\)*(?:[a-z0-9ÀàÁáÉéĜĝḪḫÍíŠšÙùÚúÛû×*]+))*\s*/gi, (word) => {
+							return word.trim().split(/[-\.]|(&#x12[0-9a-f]{3};|&#x200D;|\/|\\)/i).map((p) => {
+								if (p === '/' || p === '\\') return p;
 								const sym = json.unicode.find(d => new RegExp(`^${d.pattern || d[0]}$`).test(p));
 								return (typeof sym === 'object' && (sym.replacement || sym[1])) || p;
 							}).join('');
