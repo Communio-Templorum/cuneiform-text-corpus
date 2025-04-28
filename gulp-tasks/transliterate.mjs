@@ -1,5 +1,5 @@
-const fs = require('fs')
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 const logs = false;
 
 function elementLang(el) {
@@ -25,17 +25,17 @@ function updateJson(done) {
 	}
 	done();
 }
+import gulpDom from '@yodasws/gulp-dom';
 
-module.exports = (gulp, plugins, options, argv) => {
-plugins.dom = require('@yodasws/gulp-dom');
-return gulp.series(
+export default function transliterate(done) {
+gulp.series(
 	updateJson,
 	// First, simplify markup and wrap with <ruby>
 	gulp.parallel(
 		// Correct Markup in ETCSL Texts
 		() => {
 			return gulp.src([
-				`src/etcsl/**/*.html`,
+				'src/etcsl/**/*.html',
 			])
 			// Simplify HTML
 				.pipe(plugins.replaceString(
@@ -78,7 +78,7 @@ return gulp.series(
 					'</ol>',
 					{ logs },
 				))
-				.pipe(plugins.dom(function () {
+				.pipe(gulpDom(function () {
 					this.querySelectorAll('span[title]').forEach((el) => {
 						let html = ' <ruby ';
 						if (el.hasAttribute('class')) {
@@ -155,29 +155,29 @@ return gulp.series(
 					{ logs },
 				))
 			// Wrap each cuneiform word in <ruby>
-			.pipe(plugins.dom(function () {
-				this.querySelectorAll('li > span').forEach((line) => {
-					line.outerHTML = line.innerHTML.trim().split(' ').map((word) => {
-						if (/\[?[x…]\]?/i.test(word)) return word;
-						const rt = word.replace(/^NU:/, '').replace(/_/g, ' ');
-						// Handle numbers, e.g. 1(diš)
-						if (Array.isArray(json.cdli)) {
-							json.cdli.forEach((d) => {
-								word = word.replace(new RegExp(d[0], 'g'), d[1]);
-							});
-						}
-						const lang = elementLang(line) || 'und';
-						// Build <rb><rt>
-						let ruby = `<rb translate="no">${word}</rb><rt lang="${lang}-Latn" translate="no">${rt}</rt>`;
-						// Add English translation if provided
-						if (line.hasAttribute('title')) {
-							ruby += `<rtc lang="en" translate="yes">${line.getAttribute('title')}</rtc>`;
-						}
-						// Return <ruby>
-						return `<ruby lang="${lang}" translate="no">${ruby}</ruby>`;
-					}).join(' ');
-				});
-			}))
+				.pipe(gulpDom(function () {
+					this.querySelectorAll('li > span').forEach((line) => {
+						line.outerHTML = line.innerHTML.trim().split(' ').map((word) => {
+							if (/\[?[x…]\]?/i.test(word)) return word;
+							const rt = word.replace(/^NU:/, '').replace(/_/g, ' ');
+							// Handle numbers, e.g. 1(diš)
+							if (Array.isArray(json.cdli)) {
+								json.cdli.forEach((d) => {
+									word = word.replace(new RegExp(d[0], 'g'), d[1]);
+								});
+							}
+							const lang = elementLang(line) || 'und';
+							// Build <rb><rt>
+							let ruby = `<rb translate="no">${word}</rb><rt lang="${lang}-Latn" translate="no">${rt}</rt>`;
+							// Add English translation if provided
+							if (line.hasAttribute('title')) {
+								ruby += `<rtc lang="en" translate="yes">${line.getAttribute('title')}</rtc>`;
+							}
+							// Return <ruby>
+							return `<ruby lang="${lang}" translate="no">${ruby}</ruby>`;
+						}).join(' ');
+					});
+				}))
 				.pipe(plugins.replaceString(
 					new RegExp('&amp;', 'g'),
 					' / ',
@@ -251,7 +251,7 @@ return gulp.series(
 				path.join('build', obj.folder, obj.selection),
 			]);
 
-			stream = stream.pipe(plugins.dom(function () {
+			stream = stream.pipe(gulpDom(function () {
 				this.querySelectorAll('rb').forEach((rb) => {
 					if (Array.isArray(json.remove)) {
 						rb.innerHTML = rb.innerHTML.replace(new RegExp(`(?:${json.remove.join('|')})`, 'g'), '');
@@ -307,4 +307,5 @@ return gulp.series(
 		done();
 	},
 );
+	done();
 };

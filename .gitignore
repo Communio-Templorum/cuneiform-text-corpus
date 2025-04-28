@@ -1,3 +1,11 @@
+# Vim
+*.swp
+*~
+
+# Build directories
+bundle
+build
+
 # Logs
 logs
 *.log
@@ -29,18 +37,14 @@ bower_components
 # node-waf configuration
 .lock-wscript
 
-# Compiled binary addons (https://nodejs.org/api/addons.html)
+# Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
-
-# Build directories
-bundle/
-build/
 
 # Dependency directories
 node_modules/
 jspm_packages/
 
-# TypeScript v1 declaration files
+# Typescript v1 declaration files
 typings/
 
 # Optional npm cache directory
@@ -55,15 +59,18 @@ typings/
 # Output of 'npm pack'
 *.tgz
 
+# Yarn
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+package-lock.json
+
 # Yarn Integrity file
 .yarn-integrity
 
 # dotenv environment variables file
 .env
-
-# next.js build output
-.next
-
-# vim files
-*.swp
-*~
