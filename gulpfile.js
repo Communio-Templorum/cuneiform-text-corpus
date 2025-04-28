@@ -97,6 +97,9 @@ const plugins = require('gulp-load-plugins')({
 		compileSass(gulpSass) {
 			return gulpSass(sass);
 		},
+		debug(gulpDebug) {
+			return gulpDebug.default;
+		},
 	},
 });
 plugins.replaceString = require('@yodasws/gulp-pattern-replace');
@@ -486,6 +489,7 @@ export function lintSass() {
 		.pipe(plugins.lintSass(options.lintSass || {}))
 		.pipe(plugins.lintSass.format());
 };
+export { lintSass as 'lint:sass' };
 
 export function lintJs() {
 	return gulp.src([
@@ -496,6 +500,7 @@ export function lintJs() {
 		.pipe(plugins.lintES(options.lintES || {}))
 		.pipe(plugins.lintES.format());
 };
+export { lintJs as 'lint:js' };
 
 export const lint = gulp.parallel(lintSass, lintJs);
 
@@ -517,15 +522,14 @@ gulp.task('transfer-files', gulp.parallel(
 	'transfer:res',
 ));
 
-globalThis.gulp = gulp;
 globalThis.plugins = plugins;
 globalThis.options = options;
 globalThis.argv = argv;
 
-import transliterate from './gulp-tasks/transliterate.mjs';
-gulp.task('transliterate', transliterate);
+import { transliterate } from './gulp-tasks/transliterate.mjs';
+export { transliterate };
 
-gulp.task('compile', gulp.parallel('compile:html', 'compile:js', 'compile:sass', 'transfer-files', 'transliterate'));
+gulp.task('compile', gulp.parallel('compile:html', 'compile:js', 'compile:sass', 'transfer-files', transliterate));
 gulp.task('reload', (done) => {
 	gulp.src('docs/').pipe(plugins['connect.reload']());
 	done();
@@ -559,7 +563,7 @@ gulp.task('watch', (done) => {
 		'src/cdli/**/*.html',
 	], {
 		usePolling: true,
-	}, gulp.series('transliterate', 'reload'));
+	}, gulp.series(transliterate, 'reload'));
 
 	done();
 });
@@ -751,6 +755,8 @@ yodasws.page('home').setRoute({
 			const site = {
 				name: packageJson.name,
 				components:[
+				],
+				sections:[
 				],
 				pages:[
 				],

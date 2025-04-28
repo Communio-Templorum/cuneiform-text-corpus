@@ -1,4 +1,4 @@
-import fs from 'fs';
+import { readFile } from 'fs/promises';
 import path from 'path';
 const logs = false;
 
@@ -12,24 +12,23 @@ function elementLang(el) {
 }
 
 let json = {};
-function updateJson(done) {
-	json = JSON.parse(fs.readFileSync(`./src/cuneiform.json`));
-	if (Array.isArray(json.unicode)) {
-		json.unicode = json.unicode.reverse().filter((d) => {
-			d = d.pattern || d[0];
-			// Don't replace numbers yet
-			if (d.match(/^[0-9,]+$/)) return false;
-			if (d.match(/\b(or|one|two|three|four|five|six|seven|eight|nine)\b/)) return false;
-			return true;
-		});
-	}
-	done();
-}
+
+import gulp from 'gulp';
 import gulpDom from '@yodasws/gulp-dom';
 
-export default function transliterate(done) {
-gulp.series(
-	updateJson,
+export const transliterate = gulp.series(
+	async function updateJson() {
+		json = JSON.parse(await readFile(`./src/cuneiform.json`));
+		if (Array.isArray(json.unicode)) {
+			json.unicode = json.unicode.reverse().filter((d) => {
+				d = d.pattern || d[0];
+				// Don't replace numbers yet
+				if (d.match(/^[0-9,]+$/)) return false;
+				if (d.match(/\b(or|one|two|three|four|five|six|seven|eight|nine)\b/)) return false;
+				return true;
+			});
+		}
+	},
 	// First, simplify markup and wrap with <ruby>
 	gulp.parallel(
 		// Correct Markup in ETCSL Texts
@@ -104,10 +103,14 @@ gulp.series(
 						el.outerHTML = html;
 					});
 				}))
+			// What files were transliterated?
+				.pipe(plugins.debug())
+			// Output!
 				.pipe(gulp.dest('build/etcsl'));
 		},
 		// Correct Markup in CDLI Texts
 		() => {
+			// (
 			const numberRegex = /(\d+)\s*\(([^)]+)\)-?/g;
 			return gulp.src([
 				'src/cdli/{P,Q}*.html',
@@ -237,7 +240,7 @@ gulp.series(
 			'etcsl/{1,2,3,4,5,6}.*',
 			'cdli/{P,Q}*.html',
 			'enuma-elish.html',
-		]).map(file => {
+		]).map((file) => {
 			let folder = '';
 			if (file.includes('/')) {
 				[folder, file] = file.split('/', 2);
@@ -301,11 +304,12 @@ gulp.series(
 				{ logs },
 			));
 
+			// What files were transliterated?
+			stream.pipe(plugins.debug());
+
 			// Output Results
 			stream.pipe(gulp.dest(path.join(options.dest, obj.folder !== '**' ? obj.folder : '')));
 		});
 		done();
 	},
 );
-	done();
-};
