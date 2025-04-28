@@ -63,7 +63,7 @@ export const transliterate = gulp.series(
 					{ logs },
 				))
 				.pipe(plugins.replaceString(
-					new RegExp(`<span onMouseover=[^']+'([^']+)'[^>]*>`, 'g'),
+					new RegExp(`<span onMouseover=[^']+'([^'\\\\]+(?:\\\\.[^'\\\\]*)*)'[^>]*>`, 'g'),
 					'<span title="$1">',
 					{ logs },
 				))
@@ -90,8 +90,9 @@ export const transliterate = gulp.series(
 						}
 						html += `lang="${elementLang(el) || 'sux'}" translate="no"><rb translate="no">${el.innerHTML}</rb>`;
 
-						if (el.getAttribute('title').indexOf('(') > -1) {
-							const [rt, rtc] = el.getAttribute('title').split(/\s*\([^\)]*\)\s*/g);
+						const title = el.getAttribute('title').replace(/\\'/g, '\'');
+						if (title.indexOf('(') > -1) {
+							const [rt, rtc] = title.split(/\s*\([^\)]*\)\s*/g);
 							if (rt && rt !== 'X' && rt !== '…') {
 								html += `<rt lang="${elementLang(el) || 'sux'}-Latn" translate="no">${rt}</rt>`;
 							}
@@ -99,7 +100,7 @@ export const transliterate = gulp.series(
 								html += `<rtc lang="en" translate="yes">${rtc}</rtc>`;
 							}
 						} else {
-							const rtc = el.getAttribute('title');
+							const rtc = title;
 							if (rtc && rtc !== 'X' && rtc !== '…') {
 								html += `<rtc lang="en" translate="yes">${rtc}</rtc>`;
 							}
