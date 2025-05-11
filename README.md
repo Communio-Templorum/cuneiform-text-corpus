@@ -1,4 +1,4 @@
-# Cuneiform Text Corpus
+# Cuneiform Text Library
 A collection of texts written in cuneiform presented _in_ cuneiform.
 
 This project takes online resources in cuneiform that have been transliterated into Latin script and
