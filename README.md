@@ -9,7 +9,7 @@ The code uses a simple [dictionary](https://github.com/Communio-Templorum/cuneif
 to transliterate the sign names into Unicode.
 
 ## Copyright
-JavaScript code ©2017–2021 Samuel B Grundman. All rights reserved.
+JavaScript code ©2017–2025 Samuel B Grundman. All rights reserved.
 
 The original texts/stories, in their original language, are in the public domain and I believe the
 transliterated text would be, too. Regardless, I contend this project falls fully within the United
@@ -20,7 +20,12 @@ taken from a source in the public domain, or were published with permission from
 translator and properly cited.
 
 ### Sources
+
+#### Texts
 * [Electronic Text Corpus of Sumerian Literature (ETCSL)](http://etcsl.orinst.ox.ac.uk/)
 * [Cuneiform Digital Library Initiative (CDLI)](https://cdli.ucla.edu/)
+
+#### Sign Lists
+* [ETCSL Sign List](https://etcsl.orinst.ox.ac.uk/edition2/signlist.php)
 * [Complete Sign List, Kateřina Šašková, Pilsen 2021](http://home.zcu.cz/~ksaskova/Sign_List.html)
 * [ePSD, Online Dictionary](http://psd.museum.upenn.edu/nepsd-frame.html)
