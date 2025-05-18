@@ -36,6 +36,7 @@ export const transliterate = gulp.series(
 			return gulp.src([
 				'src/etcsl/**/*.html',
 			])
+				.pipe(plugins.cached('etcsl'))
 			// Simplify HTML
 				.pipe(plugins.replaceString(
 					new RegExp('(<(!DOCTYPE html|hr)[^>]*>|<(?<tag>(center|head|h[23456]|p))\\b[^>]*>(.|\n)*?</\\k<tag>>)(\s|\n)*', 'g'),
@@ -121,6 +122,7 @@ export const transliterate = gulp.series(
 			return gulp.src([
 				'src/cdli/{P,Q}*.html',
 			])
+				.pipe(plugins.cached('cdli'))
 				.pipe(plugins.replaceString(
 					new RegExp('<table\\b[^>]*>', 'gi'),
 					'<ol>',
@@ -216,6 +218,7 @@ export const transliterate = gulp.series(
 			return gulp.src([
 				'src/enuma-elish.html',
 			])
+				.pipe(plugins.cached('enuma-elish'))
 				.pipe(plugins.replaceString(
 					new RegExp('<strong>([a-z0-9.\\-’]+)</strong>', 'gi'),
 					(str, signs) => `<ruby lang="akk" translate="no"><rb translate="no">${signs.replace(/\b(sh)|sh\b/gi, 'š')}</rb><rt lang="akk-Latn" translate="no">${signs}</rt></ruby>`,
@@ -258,7 +261,8 @@ export const transliterate = gulp.series(
 		}).forEach((obj) => {
 			let stream = gulp.src([
 				path.join('build', obj.folder, obj.selection),
-			]);
+			])
+				.pipe(plugins.cached('build'));
 
 			stream = stream.pipe(gulpDom(function () {
 				this.querySelectorAll('rb').forEach((rb) => {

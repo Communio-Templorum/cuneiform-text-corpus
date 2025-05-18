@@ -2857,6 +2857,7 @@ __metadata:
     gulp: "npm:^5.0.0"
     gulp-autoprefixer: "npm:^7.0.0"
     gulp-babel: "npm:^8.0.0"
+    gulp-cached: "npm:^1.1.1"
     gulp-concat: "npm:^2.6.1"
     gulp-connect: "npm:^5.7.0"
     gulp-debug: "npm:^5.0.1"
@@ -4309,6 +4310,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"gulp-cached@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "gulp-cached@npm:1.1.1"
+  dependencies:
+    lodash.defaults: "npm:^4.2.0"
+    through2: "npm:^2.0.1"
+  checksum: 10c0/d0809dd40f8db2a958c0b935ff431b3c2efc3a47f219b392457794e747e45707c2099513bd0ef5d75a6acdbda404b538c3643c4163f5db57816882ad6094a64f
+  languageName: node
+  linkType: hard
+
 "gulp-cli@npm:^3.0.0":
   version: 3.0.0
   resolution: "gulp-cli@npm:3.0.0"
@@ -5442,6 +5453,13 @@ __metadata:
   version: 4.0.8
   resolution: "lodash.debounce@npm:4.0.8"
   checksum: 10c0/762998a63e095412b6099b8290903e0a8ddcb353ac6e2e0f2d7e7d03abd4275fe3c689d88960eb90b0dde4f177554d51a690f22a343932ecbc50a5d111849987
+  languageName: node
+  linkType: hard
+
+"lodash.defaults@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "lodash.defaults@npm:4.2.0"
+  checksum: 10c0/d5b77aeb702caa69b17be1358faece33a84497bcca814897383c58b28a2f8dfc381b1d9edbec239f8b425126a3bbe4916223da2a576bb0411c2cefd67df80707
   languageName: node
   linkType: hard
 
